@@ -1,7 +1,19 @@
 from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import JSONB
+from pydantic import BaseModel
+from typing import List, Optional
 from app.db.database import Base
+
+
+class ArticleContent(BaseModel):
+    """Pydantic model for article JSONB content structure"""
+    main_content: Optional[str] = None
+    sidebar_content: Optional[str] = None
+    footer_content: Optional[str] = None
+    summary: Optional[str] = None
+    tags: List[str] = []
 
 
 class Article(Base):
@@ -9,7 +21,7 @@ class Article(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
-    content = Column(Text, nullable=True)
+    content = Column(JSONB, nullable=True, default={})
     article_type = Column(
         String, default="general"
     )  # character, location, item, lore, etc.

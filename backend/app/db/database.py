@@ -5,10 +5,10 @@ from app.core.config import settings
 
 engine = create_engine(
     settings.database_url,
-    # SQLite specific settings
-    connect_args=(
-        {"check_same_thread": False} if "sqlite" in settings.database_url else {}
-    ),
+    # PostgreSQL connection pool settings
+    pool_size=5,
+    max_overflow=10,
+    pool_pre_ping=True,
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
