@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
+from app.models.article import ArticleContent
 
 
 class ArticleBase(BaseModel):
     title: str
-    content: Optional[str] = None
+    content: Optional[ArticleContent] = None
     article_type: str = "general"
     project_id: int
 
@@ -16,7 +17,7 @@ class ArticleCreate(ArticleBase):
 
 class ArticleUpdate(BaseModel):
     title: Optional[str] = None
-    content: Optional[str] = None
+    content: Optional[ArticleContent] = None
     article_type: Optional[str] = None
 
 

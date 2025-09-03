@@ -14,12 +14,12 @@ class Settings(BaseSettings):
 
     # Database Settings
     DATABASE_URL: str = (
-        "sqlite:///./mythosengine.db"  # Default to SQLite for local development
+        "postgresql://postgres:password@localhost:5432/mythosengine"  # Default PostgreSQL for local development
     )
-    POSTGRES_SERVER: Optional[str] = None
-    POSTGRES_USER: Optional[str] = None
-    POSTGRES_PASSWORD: Optional[str] = None
-    POSTGRES_DB: Optional[str] = None
+    POSTGRES_SERVER: Optional[str] = "localhost"
+    POSTGRES_USER: Optional[str] = "postgres"
+    POSTGRES_PASSWORD: Optional[str] = "password"
+    POSTGRES_DB: Optional[str] = "mythosengine"
 
     # Security Settings
     SECRET_KEY: str = "your-secret-key-change-this-in-production"
