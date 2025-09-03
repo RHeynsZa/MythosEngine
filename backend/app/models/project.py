@@ -11,7 +11,11 @@ class Project(Base):
     name = Column(String, index=True, nullable=False)
     description = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    updated_at = Column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
 
     # Relationships
-    articles = relationship("Article", back_populates="project", cascade="all, delete-orphan")
+    articles = relationship(
+        "Article", back_populates="project", cascade="all, delete-orphan"
+    )
