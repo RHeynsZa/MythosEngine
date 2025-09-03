@@ -27,28 +27,119 @@ Content Refinement: Get help expanding on a point, rephrasing a paragraph, or ch
 ## Tech Stack
 Mythos Engine is built with a modern, performant, and scalable technology stack.
 
-Backend: Python with FastAPI
+**Backend:** Python with FastAPI
+- **Database:** PostgreSQL (production) / SQLite (development)
+- **ORM:** SQLAlchemy
+- **Migrations:** Alembic
+- **Authentication:** Clerk (for production) / Disabled (for local development)
 
-Database: PostgreSQL
+**Frontend:** React with TanStack Router & TanStack Query
+- **Styling:** Tailwind CSS with Shadcn UI for components
+- **Build Tool:** Vite
 
-ORM: SQLAlchemy
+**Deployment:** Docker
 
-Frontend: React with TanStack Router & TanStack Query
+## Project Structure
 
-Styling: Tailwind CSS with Shadcn UI for components
-
-Deployment: Docker
+```
+mythosengine/
+├── frontend/          # React frontend application
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── ...
+├── backend/           # FastAPI backend application
+│   ├── app/
+│   │   ├── api/       # API endpoints
+│   │   ├── core/      # Core configuration
+│   │   ├── db/        # Database setup
+│   │   ├── models/    # SQLAlchemy models
+│   │   ├── schemas/   # Pydantic schemas
+│   │   └── services/  # Business logic
+│   ├── alembic/       # Database migrations
+│   ├── requirements.txt
+│   └── ...
+├── docker-compose.yml     # Production Docker setup
+├── docker-compose.dev.yml # Development Docker setup
+└── package.json          # Root package.json with scripts
+```
 
 ## 🚀 Getting Started
 
 You can get a local instance of Mythos Engine up and running in a few simple steps.
 
-To run this application:
+### Prerequisites
+
+- Node.js 18+ and npm
+- Python 3.11+
+- Docker (optional, for containerized development)
+
+### Quick Start (Local Development)
+
+1. **Install all dependencies:**
+   ```bash
+   npm run install:all
+   ```
+
+2. **Set up the backend database:**
+   ```bash
+   npm run setup:backend
+   ```
+
+3. **Start both frontend and backend in development mode:**
+   ```bash
+   npm run dev
+   ```
+
+This will start:
+- Frontend on http://localhost:3000
+- Backend API on http://localhost:8000
+- API documentation at http://localhost:8000/docs
+
+### Alternative: Docker Development
+
+If you prefer using Docker:
 
 ```bash
-npm install
-npm run start
+# For development with SQLite (recommended for local development)
+npm run docker:dev
+
+# For production-like environment with PostgreSQL
+npm run docker:prod
 ```
+
+### Manual Setup
+
+If you prefer to run each component separately:
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+**Backend:**
+```bash
+cd backend
+pip install -r requirements.txt
+alembic upgrade head  # Set up database
+python run.py
+```
+
+### Development Notes
+
+**Authentication:**
+- **Local Development:** Authentication is disabled by default (`ENABLE_AUTH=false`)
+- **Production:** Uses Clerk for authentication (set `ENABLE_AUTH=true` and configure `CLERK_SECRET_KEY`)
+
+**Database:**
+- **Local Development:** Uses SQLite for simplicity
+- **Production:** Uses PostgreSQL (configure via environment variables)
+
+**API Documentation:**
+- FastAPI automatically generates interactive API docs at `http://localhost:8000/docs`
+- Alternative docs available at `http://localhost:8000/redoc`
 
 ## Building For Production
 
