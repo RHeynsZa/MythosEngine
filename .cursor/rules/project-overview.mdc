@@ -1,0 +1,55 @@
+---
+alwaysApply: false
+---
+
+Project Overview: Mythos Engine
+1. Project Vision & Goal
+Mythos Engine is a comprehensive, open-source platform for world-building and creative writing. It's designed to be the central hub for writers, game masters, and creators to build, organize, and write about their fictional worlds for TTRPG campaigns (like D&D), novels, and other creative projects. The platform combines a structured, wiki-style knowledge base with a powerful, integrated AI writing assistant to facilitate both organization and creativity.
+
+2. Core Features & Functionality
+Wiki-Style Content Management
+The core of the application is a system for creating interconnected articles.
+
+Each article will have a standard structure: Title, Main Content Body, and a Sidebar for metadata, summaries, or related links etc.
+
+Support for internal linking between articles to create a deeply connected knowledge base (e.g., @mentioning a character to automatically link to their article).
+
+AI Writing Assistant
+Integrated directly into the article editor to act as a creative partner.
+
+Ideation & Brainstorming: Users can input a simple concept (e.g., "a desert city that worships a fallen star") and the AI will generate leading questions, plot hooks, or character concepts.
+
+Prompt-Based Generation: A library of pre-written prompts will be available for common tasks like "Describe this location," "Write a brief history of this faction," or "Create a dialogue between these two characters."
+
+Content Refinement: Tools for summarizing text, rephrasing in different tones, or expanding on a selected point.
+
+User & Project Management
+Users can manage multiple distinct projects (worlds) within a single account.
+
+Basic user authentication and profile management.
+
+1. Technical Architecture & Stack
+This stack is chosen for performance, developer experience, and scalability.
+
+Backend: Python & FastAPI
+Framework: FastAPI will be used for its high performance, asynchronous support, and automatic OpenAPI documentation generation.
+
+Data Validation: Pydantic will be used extensively for robust data validation, serialization, and settings management, ensuring a clean and reliable API layer.
+
+Database ORM: SQLAlchemy (specifically with its async capabilities) will manage all communication with the PostgreSQL database, providing a powerful and flexible object-relational mapping.
+
+AI Integration: The backend will communicate with an external LLM service (e.g., OpenAI API). It will manage prompt engineering, API key handling, and serving AI-generated content to the frontend.
+
+Database: PostgreSQL
+Reasoning: Chosen for its reliability, powerful feature set, and excellent support for structured relational data alongside semi-structured data via its JSONB type. This allows us to store core article metadata relationally while giving flexibility to the content within the articles.
+
+Frontend: React
+Framework: React will be used for building a dynamic and responsive user interface.
+
+Routing: TanStack Router will handle all client-side routing, offering a modern, type-safe solution.
+
+Server State Management: TanStack Query will be critical for managing all asynchronous operations, including fetching data from our API and handling the loading/error states of AI interactions. It will provide a robust caching layer to enhance performance.
+
+Styling: A utility-first approach will be taken using Tailwind CSS for rapid and consistent styling.
+
+Component Library: Shadcn UI will be used to build accessible and composable UI components, leveraging Tailwind CSS for easy customization.
