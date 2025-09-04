@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional, List, Dict, Any
 from enum import Enum
+from .image import ImageResponse
 
 
 class ArticleTypeEnum(str, Enum):
@@ -31,6 +32,7 @@ class ArticleBase(BaseModel):
     content: Optional[ArticleContentSchema] = Field(None, description="Article content structure")
     article_type: ArticleTypeEnum = Field(default=ArticleTypeEnum.GENERAL, description="Type of article")
     project_id: int = Field(..., description="ID of the project this article belongs to")
+    header_image_id: Optional[int] = Field(None, description="ID of the header image")
 
 
 class ArticleCreate(ArticleBase):
@@ -43,11 +45,13 @@ class ArticleUpdate(BaseModel):
     title: Optional[str] = Field(None, description="Title of the article")
     content: Optional[ArticleContentSchema] = Field(None, description="Article content structure")
     article_type: Optional[ArticleTypeEnum] = Field(None, description="Type of article")
+    header_image_id: Optional[int] = Field(None, description="ID of the header image")
 
 
 class Article(ArticleBase):
     """Schema for article response."""
     id: int
+    header_image: Optional[ImageResponse] = Field(None, description="Header image details")
     created_at: datetime
     updated_at: datetime
 

@@ -3,7 +3,7 @@ Article repository for database operations.
 """
 
 from typing import Optional, List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from app.db.models.article import ArticleDB
 from app.domain.models.article import Article, ArticleContent, ArticleType
 from .base_repository import BaseRepository
@@ -45,6 +45,26 @@ class ArticleRepository(BaseRepository[ArticleDB, Article]):
             .all()
         )
 
+    def get_with_header_image(self, article_id: int) -> Optional[ArticleDB]:
+        """Get article with header image relationship loaded."""
+        return (
+            self.db.query(ArticleDB)
+            .options(joinedload(ArticleDB.header_image))
+            .filter(ArticleDB.id == article_id)
+            .first()
+        )
+
+    def get_by_project_with_header_images(self, project_id: int, skip: int = 0, limit: int = 100) -> List[ArticleDB]:
+        """Get articles by project ID with header images loaded."""
+        return (
+            self.db.query(ArticleDB)
+            .options(joinedload(ArticleDB.header_image))
+            .filter(ArticleDB.project_id == project_id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
     def to_domain(self, db_obj: ArticleDB) -> Article:
         """Convert database model to domain model."""
         content = ArticleContent()
@@ -57,6 +77,7 @@ class ArticleRepository(BaseRepository[ArticleDB, Article]):
             content=content,
             article_type=ArticleType(db_obj.article_type),
             project_id=db_obj.project_id,
+            header_image_id=db_obj.header_image_id,
             created_at=db_obj.created_at,
             updated_at=db_obj.updated_at
         )
@@ -78,7 +99,8 @@ class ArticleRepository(BaseRepository[ArticleDB, Article]):
             title=domain_obj.title,
             content=content_dict,
             article_type=domain_obj.article_type.value,
-            project_id=domain_obj.project_id
+            project_id=domain_obj.project_id,
+            header_image_id=domain_obj.header_image_id
         )
 
         if domain_obj.id:
@@ -104,6 +126,7 @@ class ArticleRepository(BaseRepository[ArticleDB, Article]):
         # Update fields
         db_obj.title = domain_obj.title
         db_obj.article_type = domain_obj.article_type.value
+        db_obj.header_image_id = domain_obj.header_image_id
         
         if domain_obj.content:
             db_obj.content = {

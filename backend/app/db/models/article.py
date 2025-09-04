@@ -18,6 +18,7 @@ class ArticleDB(Base):
     content = Column(JSONB, nullable=True, default={})
     article_type = Column(String, default="general", index=True)
     project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
+    header_image_id = Column(Integer, ForeignKey("images.id"), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
@@ -25,5 +26,6 @@ class ArticleDB(Base):
 
     # Relationships
     project = relationship("ProjectDB", back_populates="articles")
+    header_image = relationship("ImageDB", foreign_keys=[header_image_id])
     person = relationship("PersonDB", back_populates="article", uselist=False)
     settlement = relationship("SettlementDB", back_populates="article", uselist=False)
