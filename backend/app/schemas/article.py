@@ -1,28 +1,67 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
-from typing import Optional
-from app.models.article import ArticleContent
+from typing import Optional, List, Dict, Any
+from enum import Enum
+
+
+class ArticleTypeEnum(str, Enum):
+    """Article type options for API."""
+    GENERAL = "general"
+    CHARACTER = "character"
+    LOCATION = "location"
+    ITEM = "item"
+    LORE = "lore"
+    EVENT = "event"
+    ORGANIZATION = "organization"
+
+
+class ArticleContentSchema(BaseModel):
+    """Schema for article content structure."""
+    main_content: Optional[str] = Field(None, description="Main content of the article")
+    sidebar_content: Optional[str] = Field(None, description="Sidebar content")
+    footer_content: Optional[str] = Field(None, description="Footer content")
+    summary: Optional[str] = Field(None, description="Summary or excerpt")
+    tags: List[str] = Field(default_factory=list, description="Tags associated with the article")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
 
 
 class ArticleBase(BaseModel):
-    title: str
-    content: Optional[ArticleContent] = None
-    article_type: str = "general"
-    project_id: int
+    """Base schema for article data."""
+    title: str = Field(..., description="Title of the article")
+    content: Optional[ArticleContentSchema] = Field(None, description="Article content structure")
+    article_type: ArticleTypeEnum = Field(default=ArticleTypeEnum.GENERAL, description="Type of article")
+    project_id: int = Field(..., description="ID of the project this article belongs to")
 
 
 class ArticleCreate(ArticleBase):
+    """Schema for creating a new article."""
     pass
 
 
 class ArticleUpdate(BaseModel):
-    title: Optional[str] = None
-    content: Optional[ArticleContent] = None
-    article_type: Optional[str] = None
+    """Schema for updating an article."""
+    title: Optional[str] = Field(None, description="Title of the article")
+    content: Optional[ArticleContentSchema] = Field(None, description="Article content structure")
+    article_type: Optional[ArticleTypeEnum] = Field(None, description="Type of article")
 
 
 class Article(ArticleBase):
+    """Schema for article response."""
     id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class ArticleSummary(BaseModel):
+    """Summary schema for article lists."""
+    id: int
+    title: str
+    article_type: ArticleTypeEnum
+    project_id: int
+    word_count: int = Field(..., description="Approximate word count")
     created_at: datetime
     updated_at: datetime
 
