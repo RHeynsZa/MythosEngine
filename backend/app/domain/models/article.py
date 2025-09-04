@@ -51,6 +51,7 @@ class Article:
     article_type: ArticleType
     project_id: int
     id: Optional[int] = None
+    header_image_id: Optional[int] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 

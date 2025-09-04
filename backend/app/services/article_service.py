@@ -13,7 +13,7 @@ class ArticleService:
 
     def get_article(self, article_id: int) -> Optional[Article]:
         """Get an article by ID."""
-        db_article = self.repository.get_by_id(article_id)
+        db_article = self.repository.get_with_header_image(article_id)
         if db_article:
             return self.repository.to_domain(db_article)
         return None
@@ -21,7 +21,7 @@ class ArticleService:
     def get_articles(self, project_id: Optional[int] = None, skip: int = 0, limit: int = 100) -> List[Article]:
         """Get articles with optional project filtering."""
         if project_id:
-            db_articles = self.repository.get_by_project(project_id, skip, limit)
+            db_articles = self.repository.get_by_project_with_header_images(project_id, skip, limit)
         else:
             db_articles = self.repository.get_all(skip, limit)
         
@@ -48,7 +48,8 @@ class ArticleService:
             title=article_data.title,
             content=content,
             article_type=ArticleType(article_data.article_type),
-            project_id=article_data.project_id
+            project_id=article_data.project_id,
+            header_image_id=article_data.header_image_id
         )
 
         return self.repository.create_from_domain(domain_article)
@@ -67,6 +68,8 @@ class ArticleService:
             current_article.content = article_data.content
         if article_data.article_type is not None:
             current_article.article_type = ArticleType(article_data.article_type)
+        if article_data.header_image_id is not None:
+            current_article.header_image_id = article_data.header_image_id
 
         return self.repository.update_from_domain(current_article)
 
@@ -78,3 +81,33 @@ class ArticleService:
             self.repository.delete(article_id)
         return article
 
+
+# Module-level functions for API compatibility
+def get_article(db: Session, article_id: int) -> Optional[Article]:
+    """Get an article by ID."""
+    service = ArticleService(db)
+    return service.get_article(article_id)
+
+
+def get_articles(db: Session, project_id: Optional[int] = None, skip: int = 0, limit: int = 100) -> List[Article]:
+    """Get articles with optional project filtering."""
+    service = ArticleService(db)
+    return service.get_articles(project_id, skip, limit)
+
+
+def create_article(db: Session, article: ArticleCreate) -> Article:
+    """Create a new article."""
+    service = ArticleService(db)
+    return service.create_article(article)
+
+
+def update_article(db: Session, article_id: int, article: ArticleUpdate) -> Optional[Article]:
+    """Update an existing article."""
+    service = ArticleService(db)
+    return service.update_article(article_id, article)
+
+
+def delete_article(db: Session, article_id: int) -> Optional[Article]:
+    """Delete an article."""
+    service = ArticleService(db)
+    return service.delete_article(article_id)
