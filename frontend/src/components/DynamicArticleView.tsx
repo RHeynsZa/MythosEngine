@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { SettlementView } from './SettlementView';
 import { PersonView } from './PersonView';
 import { SpotifyEmbed } from './SpotifyEmbed';
-import { ArticleType, Article } from '../types/article';
+import { ArticleType, type Article } from '@/types/article';
 
 interface DynamicArticleViewProps {
   article: Article;

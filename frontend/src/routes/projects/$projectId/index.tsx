@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { useState } from 'react'
 import { SimpleArticleForm } from '@/components/SimpleArticleForm'
 
-export const Route = createFileRoute('/projects/$projectId')({
+export const Route = createFileRoute('/projects/$projectId/')({
   component: ProjectDetailPage,
 })
 
@@ -138,8 +138,8 @@ function ProjectDetailPage() {
               <div className="flex items-start justify-between">
                 <CardTitle>
                   <Link 
-                    to="/articles/$articleId" 
-                    params={{ articleId: article.id }}
+                    to="/projects/$projectId/$articleId" 
+                    params={{ projectId: project.id, articleId: article.id }}
                     className="hover:underline"
                   >
                     {article.title}

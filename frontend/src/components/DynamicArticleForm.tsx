@@ -1,7 +1,7 @@
 import { ArticleForm } from './ArticleForm';
 import { SettlementForm } from './SettlementForm';
 import { PersonForm } from './PersonForm';
-import { ArticleType, Article, ArticleCreate, ArticleUpdate, Image } from '../types/article';
+import { ArticleType, type Article, type ArticleCreate, type ArticleUpdate, type Image } from '@/types/article';
 
 interface DynamicArticleFormProps {
   article?: Article;

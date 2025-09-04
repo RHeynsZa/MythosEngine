@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { SpotifyEmbed } from './SpotifyEmbed';
-import { SettlementArticle } from '../types/article';
+import type { SettlementArticle } from '@/types/article';
 
 interface SettlementViewProps {
   article: SettlementArticle;

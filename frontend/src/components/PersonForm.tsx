@@ -8,11 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   Gender, 
   LifeStatus, 
-  PersonData, 
-  PersonArticle,
-  ImportantDate,
-  Relationship
-} from '../types/article';
+  type PersonData, 
+  type PersonArticle,
+  type ImportantDate,
+  type Relationship
+} from '@/types/article';
 
 interface PersonFormProps {
   article?: PersonArticle;

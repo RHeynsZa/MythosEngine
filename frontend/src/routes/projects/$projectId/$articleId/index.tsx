@@ -7,7 +7,7 @@ import { DynamicArticleView } from '@/components/DynamicArticleView'
 import type { Article } from '@/types/article'
 import { ArticleType } from '@/types/article'
 
-export const Route = createFileRoute('/articles/$articleId')({
+export const Route = createFileRoute('/projects/$projectId/$articleId/')({
   component: ArticleEditPage,
 })
 

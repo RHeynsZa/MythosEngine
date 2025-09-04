@@ -27,7 +27,7 @@ function getSpotifyEmbedUrl(url: string): string | null {
     if (url.includes('open.spotify.com')) {
       const urlObj = new URL(url);
       const pathParts = urlObj.pathname.split('/');
-      
+
       if (pathParts.length >= 3 && pathParts[1] === 'track') {
         const trackId = pathParts[2];
         return `https://open.spotify.com/embed/track/${trackId}`;
@@ -67,8 +67,7 @@ export function SpotifyEmbed({ spotifyUrl, className }: SpotifyEmbedProps) {
         <iframe
           src={embedUrl}
           width="100%"
-          height="152"
-          frameBorder="0"
+          height="120"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
           className="rounded-md"

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { SpotifyEmbed } from './SpotifyEmbed';
-import { PersonArticle } from '../types/article';
+import { type PersonArticle } from '../types/article';
 
 interface PersonViewProps {
   article: PersonArticle;
