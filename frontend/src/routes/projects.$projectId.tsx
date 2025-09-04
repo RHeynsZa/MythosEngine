@@ -1,6 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { useState } from 'react'
 import { SimpleArticleForm } from '@/components/SimpleArticleForm'
 
@@ -17,15 +18,17 @@ const mockProjects: Record<string, any> = {
     articles: [
       {
         id: '1',
-        title: 'The Kingdom of Eldoria',
-        content: 'A prosperous kingdom in the northern continent...',
+        title: 'Riverdale',
+        content: 'A prosperous trading town at the confluence of two major rivers...',
+        type: 'Settlement',
         createdAt: '2024-01-15',
         updatedAt: '2024-01-15',
       },
       {
         id: '2',
-        title: 'Magic System Overview',
-        content: 'The magic in this world is based on elemental forces...',
+        title: 'Sir Marcus Ironwood',
+        content: 'A veteran knight of the Silver Order known for honor and tactical skill...',
+        type: 'Character',
         createdAt: '2024-01-14',
         updatedAt: '2024-01-16',
       },
@@ -132,15 +135,22 @@ function ProjectDetailPage() {
         {project.articles.map((article: any) => (
           <Card key={article.id} className="hover:shadow-md transition-shadow">
             <CardHeader>
-              <CardTitle>
-                <Link 
-                  to="/articles/$articleId" 
-                  params={{ articleId: article.id }}
-                  className="hover:underline"
-                >
-                  {article.title}
-                </Link>
-              </CardTitle>
+              <div className="flex items-start justify-between">
+                <CardTitle>
+                  <Link 
+                    to="/articles/$articleId" 
+                    params={{ articleId: article.id }}
+                    className="hover:underline"
+                  >
+                    {article.title}
+                  </Link>
+                </CardTitle>
+                {article.type && (
+                  <Badge variant="secondary" className="ml-2">
+                    {article.type}
+                  </Badge>
+                )}
+              </div>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-2 line-clamp-3">
