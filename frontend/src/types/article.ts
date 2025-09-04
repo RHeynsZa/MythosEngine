@@ -75,3 +75,124 @@ export interface ArticleSummary {
   created_at: string;
   updated_at: string;
 }
+
+// Settlement-specific types
+export enum SettlementType {
+  CITY = "city",
+  TOWN = "town", 
+  VILLAGE = "village",
+  HAMLET = "hamlet",
+  METROPOLIS = "metropolis",
+  CAPITAL = "capital",
+  FORTRESS = "fortress",
+  OUTPOST = "outpost",
+  TRADING_POST = "trading_post",
+  RUINS = "ruins"
+}
+
+export enum GovernmentType {
+  MONARCHY = "monarchy",
+  DEMOCRACY = "democracy",
+  OLIGARCHY = "oligarchy",
+  THEOCRACY = "theocracy",
+  TRIBAL = "tribal",
+  ANARCHY = "anarchy",
+  COUNCIL = "council",
+  DICTATORSHIP = "dictatorship"
+}
+
+export interface SettlementData {
+  settlement_type: SettlementType;
+  population?: number | null;
+  government_type?: GovernmentType | null;
+  ruler_name?: string | null;
+  founded_date?: string | null;
+  notable_features: string[];
+  trade_goods: string[];
+  defenses?: string | null;
+  climate?: string | null;
+  terrain?: string | null;
+  wealth_level?: string | null;
+  coordinates?: { lat: number; lng: number } | null;
+  region?: string | null;
+  nearby_settlements: string[];
+  primary_industry?: string | null;
+  secondary_industries: string[];
+  predominant_race?: string | null;
+  languages_spoken: string[];
+  religions: string[];
+  festivals: string[];
+}
+
+// Person-specific types
+export enum Gender {
+  MALE = "male",
+  FEMALE = "female",
+  NON_BINARY = "non_binary",
+  OTHER = "other",
+  UNKNOWN = "unknown"
+}
+
+export enum LifeStatus {
+  ALIVE = "alive",
+  DEAD = "dead",
+  MISSING = "missing",
+  UNKNOWN = "unknown",
+  UNDEAD = "undead",
+  IMMORTAL = "immortal"
+}
+
+export interface ImportantDate {
+  date: string;
+  event: string;
+  description?: string | null;
+  location?: string | null;
+}
+
+export interface Relationship {
+  person_name: string;
+  relationship_type: string;
+  description?: string | null;
+  status: string;
+}
+
+export interface PersonData {
+  race?: string | null;
+  gender?: Gender | null;
+  age?: number | null;
+  life_status: LifeStatus;
+  height?: string | null;
+  weight?: string | null;
+  eye_color?: string | null;
+  hair_color?: string | null;
+  distinguishing_marks: string[];
+  birthplace?: string | null;
+  current_location?: string | null;
+  occupation?: string | null;
+  social_class?: string | null;
+  birth_date?: string | null;
+  death_date?: string | null;
+  important_dates: ImportantDate[];
+  relationships: Relationship[];
+  skills: string[];
+  abilities: string[];
+  personality_traits: string[];
+  goals: string[];
+  fears: string[];
+  secrets: string[];
+  notable_possessions: string[];
+  wealth?: string | null;
+  organizations: string[];
+  titles: string[];
+}
+
+// Extended article interfaces that include specialized data
+export interface SettlementArticle extends Article {
+  article_type: ArticleType.LOCATION;
+  settlement_data?: SettlementData;
+}
+
+export interface PersonArticle extends Article {
+  article_type: ArticleType.CHARACTER;
+  person_data?: PersonData;
+}

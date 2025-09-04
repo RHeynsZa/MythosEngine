@@ -2,7 +2,8 @@ import { Link, createFileRoute } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useState } from 'react'
-import { ArticleForm } from '@/components/ArticleForm'
+import { DynamicArticleForm } from '@/components/DynamicArticleForm'
+import { DynamicArticleView } from '@/components/DynamicArticleView'
 import type { Article } from '@/types/article'
 import { ArticleType } from '@/types/article'
 
@@ -14,36 +15,125 @@ export const Route = createFileRoute('/articles/$articleId')({
 const mockArticles: Record<string, Article> = {
   '1': {
     id: 1,
-    title: 'The Kingdom of Eldoria',
+    title: 'Riverdale',
     article_type: ArticleType.LOCATION,
     project_id: 1,
     content: {
-      main_content: 'A prosperous kingdom in the northern continent, known for its fertile lands and skilled craftsmen. The kingdom is ruled by King Aldric the Wise, who has maintained peace for over two decades.',
-      sidebar_content: 'Population: ~500,000\nCapital: Eldoria City\nFounded: 847 AC',
-      footer_content: 'Last updated by the Royal Cartographers Guild',
-      summary: 'A prosperous kingdom in the northern continent',
-      tags: ['kingdom', 'location', 'fantasy'],
+      main_content: 'A prosperous trading town situated at the confluence of two major rivers. Riverdale serves as a crucial hub for merchants traveling between the northern kingdoms and the southern territories. The town is known for its bustling markets, skilled craftsmen, and the famous Riverdale Bridge - an architectural marvel that spans the wider of the two rivers.',
+      sidebar_content: 'The town\'s strategic location has made it wealthy, but also a target for raiders and political intrigue.',
+      footer_content: 'Last updated by the Merchant\'s Guild cartographers',
+      summary: 'A prosperous trading town at the confluence of two major rivers',
+      tags: ['town', 'trade', 'rivers', 'bridge'],
       metadata: {}
+    },
+    settlement_data: {
+      settlement_type: 'town' as any,
+      population: 8500,
+      government_type: 'council' as any,
+      ruler_name: 'Mayor Gareth Blackwater',
+      founded_date: '1247 AC',
+      notable_features: ['The Great Bridge', 'River Markets', 'Merchant Quarter', 'Watermills'],
+      trade_goods: ['Grain', 'Textiles', 'River Fish', 'Pottery', 'Iron Tools'],
+      defenses: 'Stone walls on three sides, with the rivers providing natural barriers. A small garrison of 200 guards maintains order.',
+      climate: 'Temperate',
+      terrain: 'River valley',
+      wealth_level: 'wealthy',
+      coordinates: null,
+      region: 'Central Kingdoms',
+      nearby_settlements: ['Millhaven', 'Crossroads Keep', 'Oakenford'],
+      primary_industry: 'Trade and Commerce',
+      secondary_industries: ['Fishing', 'Milling', 'Crafts'],
+      predominant_race: 'Human',
+      languages_spoken: ['Common', 'Trader\'s Cant'],
+      religions: ['Temple of Commerce', 'River Spirits'],
+      festivals: ['Harvest Fair', 'River Festival', 'Bridge Day']
     },
     created_at: '2024-01-15',
     updated_at: '2024-01-15',
-  },
+  } as any,
   '2': {
     id: 2,
-    title: 'Magic System Overview',
-    article_type: ArticleType.LORE,
+    title: 'Sir Marcus Ironwood',
+    article_type: ArticleType.CHARACTER,
     project_id: 1,
     content: {
-      main_content: 'The magic in this world is based on elemental forces. Mages must attune themselves to one of the four primary elements: Fire, Water, Earth, or Air. Advanced practitioners can learn to combine elements, but this requires years of study and practice.',
-      sidebar_content: 'Elements:\n• Fire - Destruction & Energy\n• Water - Healing & Flow\n• Earth - Protection & Strength\n• Air - Movement & Communication',
-      footer_content: 'Compiled by the Mage\'s College',
-      summary: 'Overview of the elemental magic system',
-      tags: ['magic', 'lore', 'elements'],
+      main_content: 'A veteran knight of the Silver Order, Sir Marcus has served the realm for over twenty years. Known for his unwavering honor and tactical brilliance, he has led numerous successful campaigns against bandits and monsters threatening the borderlands. Despite his stern exterior, those who know him well speak of his dry humor and deep compassion for the common folk.',
+      sidebar_content: 'Currently stationed at Ironhold Keep, overseeing border defenses.',
+      footer_content: 'Records maintained by the Silver Order',
+      summary: 'A veteran knight of the Silver Order known for honor and tactical skill',
+      tags: ['knight', 'silver order', 'veteran', 'honorable'],
       metadata: {}
+    },
+    person_data: {
+      race: 'Human',
+      gender: 'male' as any,
+      age: 45,
+      life_status: 'alive' as any,
+      height: '6\'2"',
+      weight: 'Muscular build',
+      eye_color: 'Steel grey',
+      hair_color: 'Black with silver streaks',
+      distinguishing_marks: ['Scar across left cheek', 'Silver Order tattoo on right shoulder'],
+      birthplace: 'Ironhold Village',
+      current_location: 'Ironhold Keep',
+      occupation: 'Knight Commander',
+      social_class: 'Noble',
+      birth_date: '15th of Ironfall, 1398 AC',
+      death_date: null,
+      important_dates: [
+        {
+          date: '1416 AC',
+          event: 'Joined the Silver Order',
+          description: 'Became a squire at age 18',
+          location: 'Silver Citadel'
+        },
+        {
+          date: '1420 AC', 
+          event: 'Knighted',
+          description: 'Earned knighthood after the Battle of Crow\'s Ridge',
+          location: 'Silver Citadel'
+        },
+        {
+          date: '1435 AC',
+          event: 'Promoted to Knight Commander',
+          description: 'Given command of Ironhold Keep\'s garrison',
+          location: 'Ironhold Keep'
+        }
+      ],
+      relationships: [
+        {
+          person_name: 'Lady Elena Ironwood',
+          relationship_type: 'Wife',
+          description: 'Married for 15 years, she manages the keep\'s affairs',
+          status: 'active'
+        },
+        {
+          person_name: 'Thomas Ironwood',
+          relationship_type: 'Son',
+          description: 'Age 14, training to become a knight',
+          status: 'active'
+        },
+        {
+          person_name: 'Grand Master Aldwin',
+          relationship_type: 'Mentor',
+          description: 'Former commander who trained Marcus',
+          status: 'active'
+        }
+      ],
+      skills: ['Swordsmanship', 'Tactics', 'Leadership', 'Horseback Riding', 'Military Engineering'],
+      abilities: ['Battle Fury', 'Inspiring Presence', 'Defensive Stance'],
+      personality_traits: ['Honorable', 'Stern', 'Compassionate', 'Tactical', 'Dry humor'],
+      goals: ['Protect the borderlands', 'Train the next generation', 'Maintain peace'],
+      fears: ['Failing his duty', 'Loss of family', 'Corruption in the Order'],
+      secrets: ['Doubts about recent Order policies', 'Hidden magical sensitivity'],
+      notable_possessions: ['Ironwood - enchanted sword', 'Silver Order armor', 'Warhorse Thunderbolt'],
+      wealth: 'modest',
+      organizations: ['Silver Order', 'Ironhold Keep'],
+      titles: ['Knight Commander', 'Defender of the Borderlands']
     },
     created_at: '2024-01-14',
     updated_at: '2024-01-16',
-  },
+  } as any,
   '3': {
     id: 3,
     title: 'The Galactic Federation',
@@ -135,7 +225,7 @@ function ArticleEditPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ArticleForm
+            <DynamicArticleForm
               article={article}
               onSubmit={handleUpdateArticle}
               onCancel={() => setIsEditing(false)}
@@ -143,70 +233,7 @@ function ArticleEditPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-4">
-          <div className="lg:col-span-3">
-            <Card>
-              <CardHeader>
-                <CardTitle>Content</CardTitle>
-              </CardHeader>
-              <CardContent className="prose prose-sm max-w-none">
-                {article.content?.summary && (
-                  <div className="mb-6 p-4 bg-muted rounded-lg">
-                    <h3 className="text-sm font-semibold mb-2">Summary</h3>
-                    <p className="text-sm">{article.content.summary}</p>
-                  </div>
-                )}
-                
-                <div className="whitespace-pre-wrap">
-                  {article.content?.main_content || 'No content available.'}
-                </div>
-
-                {article.content?.footer_content && (
-                  <div className="mt-6 pt-4 border-t">
-                    <div className="text-sm text-muted-foreground whitespace-pre-wrap">
-                      {article.content.footer_content}
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="space-y-4">
-            {article.content?.sidebar_content && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Details</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-sm whitespace-pre-wrap">
-                    {article.content.sidebar_content}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {article.content?.tags && article.content.tags.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Tags</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {article.content.tags.map(tag => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary/10 text-primary"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
+        <DynamicArticleView article={article} />
       )}
     </div>
   )
