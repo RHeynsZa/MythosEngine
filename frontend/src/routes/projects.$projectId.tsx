@@ -93,9 +93,14 @@ function ProjectDetailPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <div className="mb-4">
+        <div className="mb-4 flex items-center gap-3">
           <Button variant="outline" asChild>
             <Link to="/projects">← Back to Projects</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link to="/projects/$projectId/home" params={{ projectId }}>
+              Project Home
+            </Link>
           </Button>
         </div>
         

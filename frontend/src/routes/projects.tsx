@@ -79,7 +79,7 @@ function ProjectsPage() {
             <CardHeader>
               <CardTitle>
                 <Link 
-                  to="/projects/$projectId" 
+                  to="/projects/$projectId/home" 
                   params={{ projectId: project.id }}
                   className="hover:underline"
                 >
@@ -89,9 +89,27 @@ function ProjectsPage() {
               <CardDescription>{project.description}</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground mb-4">
                 <p>{project.articleCount} articles</p>
                 <p>Created {project.createdAt}</p>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" asChild>
+                  <Link 
+                    to="/projects/$projectId/home" 
+                    params={{ projectId: project.id }}
+                  >
+                    Home
+                  </Link>
+                </Button>
+                <Button size="sm" variant="outline" asChild>
+                  <Link 
+                    to="/projects/$projectId" 
+                    params={{ projectId: project.id }}
+                  >
+                    Articles
+                  </Link>
+                </Button>
               </div>
             </CardContent>
           </Card>
