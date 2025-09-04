@@ -20,8 +20,8 @@ export class ApiError extends Error {
 }
 
 function getBaseUrl(): string {
-	const envUrl = (import.meta as any)?.env?.VITE_API_BASE_URL as string | undefined
-	return envUrl?.replace(/\/$/, '') || '/api/v1'
+	const envUrl = import.meta.env.VITE_API_BASE_URL as string | undefined
+	return `${envUrl?.replace(/\/$/, '')}/api/v1`
 }
 
 export class ApiClient {

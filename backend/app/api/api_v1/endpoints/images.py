@@ -5,12 +5,11 @@ Image API endpoints.
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
 from fastapi.responses import FileResponse
-from sqlalchemy.orm import Session
 
 from app.services.image_service import ImageService, ImageStorageError
 from app.schemas.image import ImageResponse, ImageListResponse, ImageUpdate, ImageUploadResponse
 from app.core.config import settings
-from app.db.database import get_db
+from app.services.container import get_services, ServiceContainer
 
 router = APIRouter()
 
@@ -20,7 +19,7 @@ async def upload_image(
     project_id: int = Form(...),
     alt_text: Optional[str] = Form(None),
     file: UploadFile = File(...),
-    db: Session = Depends(get_db)
+    services: ServiceContainer = Depends(get_services)
 ):
     """
     Upload an image file.
@@ -37,7 +36,7 @@ async def upload_image(
         file_content = await file.read()
         
         # Create image service and upload
-        image_service = ImageService(db)
+        image_service = services.images
         image = image_service.upload_image(
             file_content=file_content,
             original_filename=file.filename or "unknown",
@@ -73,7 +72,7 @@ def get_project_images(
     project_id: int,
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=1000),
-    db: Session = Depends(get_db)
+    services: ServiceContainer = Depends(get_services)
 ):
     """
     Get all images for a specific project with pagination.
@@ -82,18 +81,18 @@ def get_project_images(
     - **skip**: Number of items to skip (for pagination)
     - **limit**: Maximum number of items to return
     """
-    image_service = ImageService(db)
+    image_service = services.images
     return image_service.get_images_by_project(project_id, skip, limit)
 
 
 @router.get("/{image_id}", response_model=ImageResponse)
-def get_image(image_id: int, db: Session = Depends(get_db)):
+def get_image(image_id: int, services: ServiceContainer = Depends(get_services)):
     """
     Get image details by ID.
     
     - **image_id**: ID of the image
     """
-    image_service = ImageService(db)
+    image_service = services.images
     image = image_service.get_image(image_id)
     
     if not image:
@@ -103,14 +102,14 @@ def get_image(image_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/{filename}/file")
-def get_image_file(filename: str, db: Session = Depends(get_db)):
+def get_image_file(filename: str, services: ServiceContainer = Depends(get_services)):
     """
     Get the actual image file by filename.
     This endpoint serves the image file for local storage.
     
     - **filename**: Filename of the image
     """
-    image_service = ImageService(db)
+    image_service = services.images
     image = image_service.get_image_by_filename(filename)
     
     if not image:
@@ -134,7 +133,7 @@ def get_image_file(filename: str, db: Session = Depends(get_db)):
 def update_image(
     image_id: int,
     update_data: ImageUpdate,
-    db: Session = Depends(get_db)
+    services: ServiceContainer = Depends(get_services)
 ):
     """
     Update image metadata.
@@ -142,7 +141,7 @@ def update_image(
     - **image_id**: ID of the image to update
     - **update_data**: Updated image data
     """
-    image_service = ImageService(db)
+    image_service = services.images
     image = image_service.update_image(image_id, update_data)
     
     if not image:
@@ -152,13 +151,13 @@ def update_image(
 
 
 @router.delete("/{image_id}")
-def delete_image(image_id: int, db: Session = Depends(get_db)):
+def delete_image(image_id: int, services: ServiceContainer = Depends(get_services)):
     """
     Delete an image and its file.
     
     - **image_id**: ID of the image to delete
     """
-    image_service = ImageService(db)
+    image_service = services.images
     
     if not image_service.delete_image(image_id):
         raise HTTPException(status_code=404, detail="Image not found")
@@ -167,11 +166,11 @@ def delete_image(image_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/project/{project_id}/storage")
-def get_project_storage_usage(project_id: int, db: Session = Depends(get_db)):
+def get_project_storage_usage(project_id: int, services: ServiceContainer = Depends(get_services)):
     """
     Get storage usage statistics for a project.
     
     - **project_id**: ID of the project
     """
-    image_service = ImageService(db)
+    image_service = services.images
     return image_service.get_project_storage_usage(project_id)
