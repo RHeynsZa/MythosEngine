@@ -9,10 +9,7 @@ export default function Header() {
             Mythos Engine
           </Link>
           <nav className="hidden gap-2 md:flex">
-            <NavLink to="/demo/tanstack-query" label="TanStack Query" />
-            <NavLink to="/demo/table" label="TanStack Table" />
-            <NavLink to="/demo/form/simple" label="Simple Form" />
-            <NavLink to="/demo/form/address" label="Address Form" />
+            <NavLink to="/projects" label="Projects" />
           </nav>
         </div>
       </div>

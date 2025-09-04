@@ -21,14 +21,14 @@ function LandingPage() {
             Build lore-driven projects with speed and clarity
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-pretty text-base text-white/80 sm:text-lg">
-            A modern stack with React 19, TanStack Router, Query, and Tailwind. Styled with themeable tokens and ready-to-use components.
+            Create and manage your projects with rich articles and content. Build comprehensive documentation and lore for your creative works.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button asChild>
-              <Link to="/demo/form/simple">Get started</Link>
+              <Link to="/projects">View Projects</Link>
             </Button>
             <Button variant="secondary" asChild>
-              <Link to="/demo/table">Explore table demo</Link>
+              <Link to="/projects">Create Project</Link>
             </Button>
           </div>
         </div>
@@ -37,9 +37,9 @@ function LandingPage() {
       <section className="border-t border-border bg-muted/30">
         <div className="mx-auto w-full max-w-7xl px-6 py-14">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <Feature title="Type-safe routing" desc="File-based routes with TanStack Router and code-splitting by default." />
-            <Feature title="First-class forms" desc="Zod-powered forms with great ergonomics and validation." />
-            <Feature title="Composable UI" desc="Shadcn-style components themed via CSS variables and Tailwind v4." />
+            <Feature title="Project Management" desc="Organize your creative works into structured projects with rich metadata." />
+            <Feature title="Article Creation" desc="Write and edit articles with a simple interface, with plans for rich WYSIWYG editing." />
+            <Feature title="Lore Building" desc="Build comprehensive worlds and documentation for your creative projects." />
           </div>
         </div>
       </section>
