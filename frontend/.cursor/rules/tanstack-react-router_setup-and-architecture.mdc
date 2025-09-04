@@ -1,6 +1,6 @@
 ---
 description: TanStack Router: Setup and Architecture
-globs: package.json,vite.config.ts,tsconfig.json,src/**/*.ts,src/**/*.tsx
+globs: package.json,vite.config.ts,tsconfig.json,frontend/src/**/*.ts,frontend/src/**/*.tsx
 alwaysApply: false
 ---
 # Overview
