@@ -52,6 +52,7 @@ class Article:
     project_id: int
     id: Optional[int] = None
     header_image_id: Optional[int] = None
+    spotify_url: Optional[str] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
 

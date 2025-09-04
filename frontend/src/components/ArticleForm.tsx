@@ -26,6 +26,7 @@ export function ArticleForm({
     title: article?.title || '',
     article_type: article?.article_type || ArticleType.GENERAL,
     header_image_id: article?.header_image_id || null,
+    spotify_url: article?.spotify_url || '',
     content: {
       main_content: article?.content?.main_content || '',
       sidebar_content: article?.content?.sidebar_content || '',
@@ -43,7 +44,8 @@ export function ArticleForm({
     const submitData = {
       ...formData,
       project_id: article?.project_id || 1, // This should come from context/props
-      header_image_id: formData.header_image_id || undefined
+      header_image_id: formData.header_image_id || undefined,
+      spotify_url: formData.spotify_url || undefined
     };
     onSubmit(submitData);
   };
@@ -144,6 +146,21 @@ export function ArticleForm({
             )}
           </div>
         )}
+
+        {/* Spotify URL */}
+        <div className="space-y-2">
+          <Label htmlFor="spotify_url">Spotify URL (Mood Music)</Label>
+          <Input
+            id="spotify_url"
+            value={formData.spotify_url}
+            onChange={(e) => setFormData(prev => ({ ...prev, spotify_url: e.target.value }))}
+            placeholder="https://open.spotify.com/track/... or spotify:track:..."
+          />
+          <p className="text-sm text-muted-foreground">
+            Add a Spotify track URL to set the mood/tone for this article. 
+            Supports both web URLs and Spotify URIs.
+          </p>
+        </div>
 
         {/* Summary */}
         <div className="space-y-2">

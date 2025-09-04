@@ -47,6 +47,7 @@ export interface Article {
   project_id: number;
   header_image_id?: number | null;
   header_image?: Image | null;
+  spotify_url?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -57,6 +58,7 @@ export interface ArticleCreate {
   article_type: ArticleType;
   project_id: number;
   header_image_id?: number | null;
+  spotify_url?: string | null;
 }
 
 export interface ArticleUpdate {
@@ -64,6 +66,7 @@ export interface ArticleUpdate {
   content?: ArticleContent | null;
   article_type?: ArticleType;
   header_image_id?: number | null;
+  spotify_url?: string | null;
 }
 
 export interface ArticleSummary {

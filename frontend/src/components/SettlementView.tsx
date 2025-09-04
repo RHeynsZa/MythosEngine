@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { SpotifyEmbed } from './SpotifyEmbed';
 import { SettlementArticle } from '../types/article';
 
 interface SettlementViewProps {
@@ -198,6 +199,11 @@ export function SettlementView({ article }: SettlementViewProps) {
 
         {/* Sidebar */}
         <div className="space-y-4">
+          {/* Spotify Embed */}
+          {article.spotify_url && (
+            <SpotifyEmbed spotifyUrl={article.spotify_url} />
+          )}
+
           {/* Basic Details */}
           <Card>
             <CardHeader>

@@ -48,6 +48,7 @@ const mockArticles: Record<string, Article> = {
       religions: ['Temple of Commerce', 'River Spirits'],
       festivals: ['Harvest Fair', 'River Festival', 'Bridge Day']
     },
+    spotify_url: 'https://open.spotify.com/track/4iV5W9uYEdYUVa79Axb7Rh',
     created_at: '2024-01-15',
     updated_at: '2024-01-15',
   } as any,
@@ -131,6 +132,7 @@ const mockArticles: Record<string, Article> = {
       organizations: ['Silver Order', 'Ironhold Keep'],
       titles: ['Knight Commander', 'Defender of the Borderlands']
     },
+    spotify_url: 'https://open.spotify.com/track/7qiZfU4dY21yK3FjjafFpT',
     created_at: '2024-01-14',
     updated_at: '2024-01-16',
   } as any,
@@ -147,6 +149,7 @@ const mockArticles: Record<string, Article> = {
       tags: ['organization', 'politics', 'sci-fi'],
       metadata: {}
     },
+    spotify_url: 'https://open.spotify.com/track/3n3Ppam7vgaVa1iaRUc9Lp',
     created_at: '2024-01-10',
     updated_at: '2024-01-12',
   },
