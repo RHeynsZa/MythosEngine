@@ -6,6 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ImageUpload } from '@/components/ui/image-upload';
+import { uploadMultipleImages } from '@/lib/uploadService';
+import type { ConversionResult } from '@/lib/imageConverter';
 
 interface ArticleFormProps {
   article?: Article;
@@ -13,6 +16,8 @@ interface ArticleFormProps {
   onSubmit: (data: ArticleCreate | ArticleUpdate) => void;
   onCancel: () => void;
   isLoading?: boolean;
+  projectId?: number; // Add projectId for uploads
+  onImagesUploaded?: (newImages: Image[]) => void; // Callback when new images are uploaded
 }
 
 export function ArticleForm({ 
@@ -20,7 +25,9 @@ export function ArticleForm({
   images = [], 
   onSubmit, 
   onCancel, 
-  isLoading = false 
+  isLoading = false,
+  projectId = 1,
+  onImagesUploaded
 }: ArticleFormProps) {
   const [formData, setFormData] = useState({
     title: article?.title || '',
@@ -38,6 +45,8 @@ export function ArticleForm({
   });
 
   const [newTag, setNewTag] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string>('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,6 +80,57 @@ export function ArticleForm({
         tags: prev.content.tags.filter(tag => tag !== tagToRemove)
       }
     }));
+  };
+
+  const handleImageUpload = async (files: File[]) => {
+    setIsUploading(true);
+    setUploadProgress(`Uploading ${files.length} image${files.length > 1 ? 's' : ''}...`);
+
+    try {
+      const uploadedImages = await uploadMultipleImages(files, projectId);
+      
+      // Convert to the Image type expected by the component
+      const newImages: Image[] = uploadedImages.map(img => ({
+        id: img.id,
+        filename: img.original_filename, // Use original_filename as filename
+        original_filename: img.original_filename,
+        mime_type: img.mime_type,
+        file_size: img.file_size,
+        width: img.width,
+        height: img.height,
+        file_path: img.url, // Use the URL as file_path
+        is_s3_stored: false, // Assume local storage for now
+        project_id: img.project_id,
+        alt_text: img.alt_text,
+        created_at: img.created_at,
+        updated_at: img.updated_at
+      }));
+
+      setUploadProgress('Upload completed successfully!');
+      
+      // Notify parent component about new images
+      if (onImagesUploaded) {
+        onImagesUploaded(newImages);
+      }
+
+      // Clear progress after a short delay
+      setTimeout(() => setUploadProgress(''), 2000);
+    } catch (error) {
+      console.error('Upload failed:', error);
+      setUploadProgress(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      
+      // Clear error after a longer delay
+      setTimeout(() => setUploadProgress(''), 5000);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleConversionComplete = (results: ConversionResult[]) => {
+    const totalSavings = results.reduce((acc, result) => acc + result.compressionRatio, 0);
+    const avgSavings = totalSavings / results.length;
+    
+    console.log(`Images converted to WebP with average ${avgSavings.toFixed(1)}% size reduction`);
   };
 
   return (
@@ -146,6 +206,30 @@ export function ArticleForm({
             )}
           </div>
         )}
+
+        {/* Image Upload */}
+        <div className="space-y-2">
+          <Label>Upload New Images</Label>
+          <ImageUpload
+            onUpload={handleImageUpload}
+            onConvert={handleConversionComplete}
+            multiple={true}
+            maxFiles={5}
+            maxFileSize={10}
+            convertToWebP={true}
+            conversionOptions={{
+              quality: 0.8,
+              maxWidth: 2048,
+              maxHeight: 2048
+            }}
+            disabled={isUploading || isLoading}
+          />
+          {uploadProgress && (
+            <p className={`text-sm ${uploadProgress.includes('failed') ? 'text-red-600' : uploadProgress.includes('completed') ? 'text-green-600' : 'text-blue-600'}`}>
+              {uploadProgress}
+            </p>
+          )}
+        </div>
 
         {/* Spotify URL */}
         <div className="space-y-2">
