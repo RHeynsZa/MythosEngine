@@ -361,7 +361,7 @@ export function PersonForm({
                 id="height"
                 value={formData.person_data.height || ''}
                 onChange={(e) => updatePersonData('height', e.target.value || null)}
-                placeholder="e.g., 6'2\", 1.88m, Tall"
+                                  placeholder="e.g., 6'2&quot;, 1.88m, Tall"
               />
             </div>
 
