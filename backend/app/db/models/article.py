@@ -19,6 +19,7 @@ class ArticleDB(Base):
     article_type = Column(String, default="general", index=True)
     project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
     header_image_id = Column(Integer, ForeignKey("images.id"), nullable=True)
+    spotify_url = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()

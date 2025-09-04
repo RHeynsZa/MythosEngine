@@ -33,6 +33,7 @@ class ArticleBase(BaseModel):
     article_type: ArticleTypeEnum = Field(default=ArticleTypeEnum.GENERAL, description="Type of article")
     project_id: int = Field(..., description="ID of the project this article belongs to")
     header_image_id: Optional[int] = Field(None, description="ID of the header image")
+    spotify_url: Optional[str] = Field(None, description="Spotify track URL for mood/tone music")
 
 
 class ArticleCreate(ArticleBase):
@@ -46,6 +47,7 @@ class ArticleUpdate(BaseModel):
     content: Optional[ArticleContentSchema] = Field(None, description="Article content structure")
     article_type: Optional[ArticleTypeEnum] = Field(None, description="Type of article")
     header_image_id: Optional[int] = Field(None, description="ID of the header image")
+    spotify_url: Optional[str] = Field(None, description="Spotify track URL for mood/tone music")
 
 
 class Article(ArticleBase):

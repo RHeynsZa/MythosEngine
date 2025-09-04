@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { SettlementView } from './SettlementView';
 import { PersonView } from './PersonView';
+import { SpotifyEmbed } from './SpotifyEmbed';
 import { ArticleType, Article } from '../types/article';
 
 interface DynamicArticleViewProps {
@@ -57,6 +58,10 @@ function GenericArticleView({ article }: { article: Article }) {
         </div>
 
         <div className="space-y-4">
+          {article.spotify_url && (
+            <SpotifyEmbed spotifyUrl={article.spotify_url} />
+          )}
+
           {article.content?.sidebar_content && (
             <Card>
               <CardHeader>

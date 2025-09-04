@@ -59,6 +59,7 @@ export function PersonForm({
 }: PersonFormProps) {
   const [formData, setFormData] = useState({
     title: article?.title || '',
+    spotify_url: article?.spotify_url || '',
     content: {
       main_content: article?.content?.main_content || '',
       sidebar_content: article?.content?.sidebar_content || '',
@@ -329,6 +330,20 @@ export function PersonForm({
               rows={3}
               placeholder="Brief summary of the character"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="spotify_url">Spotify URL (Mood Music)</Label>
+            <Input
+              id="spotify_url"
+              value={formData.spotify_url}
+              onChange={(e) => setFormData(prev => ({ ...prev, spotify_url: e.target.value }))}
+              placeholder="https://open.spotify.com/track/... or spotify:track:..."
+            />
+            <p className="text-sm text-muted-foreground">
+              Add a Spotify track URL to set the mood/tone for this character. 
+              Supports both web URLs and Spotify URIs.
+            </p>
           </div>
         </CardContent>
       </Card>
