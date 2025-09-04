@@ -1,5 +1,11 @@
 import { useState } from 'react';
-import { Article, ArticleCreate, ArticleUpdate, ArticleType, Image } from '../types/article';
+import type { Article, ArticleCreate, ArticleUpdate, Image } from '../types/article';
+import { ArticleType } from '../types/article';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface ArticleFormProps {
   article?: Article;
@@ -66,184 +72,165 @@ export function ArticleForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl mx-auto p-6">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
         {/* Title */}
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-            Title *
-          </label>
-          <input
-            type="text"
+        <div className="space-y-2">
+          <Label htmlFor="title">Title *</Label>
+          <Input
             id="title"
             required
             value={formData.title}
             onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Enter article title"
           />
         </div>
 
         {/* Article Type */}
-        <div>
-          <label htmlFor="article_type" className="block text-sm font-medium text-gray-700 mb-2">
-            Article Type
-          </label>
-          <select
-            id="article_type"
+        <div className="space-y-2">
+          <Label htmlFor="article_type">Article Type</Label>
+          <Select
             value={formData.article_type}
-            onChange={(e) => setFormData(prev => ({ ...prev, article_type: e.target.value as ArticleType }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onValueChange={(value) => setFormData(prev => ({ ...prev, article_type: value as ArticleType }))}
           >
-            {Object.values(ArticleType).map(type => (
-              <option key={type} value={type}>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger>
+              <SelectValue placeholder="Select article type" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.values(ArticleType).map(type => (
+                <SelectItem key={type} value={type}>
+                  {type.charAt(0).toUpperCase() + type.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/* Header Image */}
-        <div>
-          <label htmlFor="header_image" className="block text-sm font-medium text-gray-700 mb-2">
-            Header Image
-          </label>
-          <select
-            id="header_image"
-            value={formData.header_image_id || ''}
-            onChange={(e) => setFormData(prev => ({ 
-              ...prev, 
-              header_image_id: e.target.value ? parseInt(e.target.value) : null 
-            }))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">No header image</option>
-            {images.map(image => (
-              <option key={image.id} value={image.id}>
-                {image.original_filename} ({image.width}x{image.height})
-              </option>
-            ))}
-          </select>
-          {formData.header_image_id && (
-            <div className="mt-2">
-              {(() => {
-                const selectedImage = images.find(img => img.id === formData.header_image_id);
-                return selectedImage ? (
-                  <div className="text-sm text-gray-600">
-                    <p>Selected: {selectedImage.original_filename}</p>
-                    <p>Size: {selectedImage.width}x{selectedImage.height} ({(selectedImage.file_size / 1024).toFixed(1)} KB)</p>
-                  </div>
-                ) : null;
-              })()}
-            </div>
-          )}
-        </div>
+        {images.length > 0 && (
+          <div className="space-y-2">
+            <Label htmlFor="header_image">Header Image</Label>
+            <Select
+              value={formData.header_image_id?.toString() || ''}
+              onValueChange={(value) => setFormData(prev => ({ 
+                ...prev, 
+                header_image_id: value ? parseInt(value) : null 
+              }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select header image" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">No header image</SelectItem>
+                {images.map(image => (
+                  <SelectItem key={image.id} value={image.id.toString()}>
+                    {image.original_filename} ({image.width}x{image.height})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {formData.header_image_id && (
+              <div className="mt-2">
+                {(() => {
+                  const selectedImage = images.find(img => img.id === formData.header_image_id);
+                  return selectedImage ? (
+                    <div className="text-sm text-muted-foreground">
+                      <p>Selected: {selectedImage.original_filename}</p>
+                      <p>Size: {selectedImage.width}x{selectedImage.height} ({(selectedImage.file_size / 1024).toFixed(1)} KB)</p>
+                    </div>
+                  ) : null;
+                })()}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Summary */}
-        <div>
-          <label htmlFor="summary" className="block text-sm font-medium text-gray-700 mb-2">
-            Summary
-          </label>
-          <textarea
+        <div className="space-y-2">
+          <Label htmlFor="summary">Summary</Label>
+          <Textarea
             id="summary"
-            value={formData.content.summary}
+            value={formData.content.summary || ''}
             onChange={(e) => setFormData(prev => ({
               ...prev,
               content: { ...prev.content, summary: e.target.value }
             }))}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Brief summary of the article"
           />
         </div>
 
         {/* Main Content */}
-        <div>
-          <label htmlFor="main_content" className="block text-sm font-medium text-gray-700 mb-2">
-            Main Content
-          </label>
-          <textarea
+        <div className="space-y-2">
+          <Label htmlFor="main_content">Main Content</Label>
+          <Textarea
             id="main_content"
-            value={formData.content.main_content}
+            value={formData.content.main_content || ''}
             onChange={(e) => setFormData(prev => ({
               ...prev,
               content: { ...prev.content, main_content: e.target.value }
             }))}
             rows={10}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Write your article content here..."
           />
         </div>
 
         {/* Sidebar Content */}
-        <div>
-          <label htmlFor="sidebar_content" className="block text-sm font-medium text-gray-700 mb-2">
-            Sidebar Content
-          </label>
-          <textarea
+        <div className="space-y-2">
+          <Label htmlFor="sidebar_content">Sidebar Content</Label>
+          <Textarea
             id="sidebar_content"
-            value={formData.content.sidebar_content}
+            value={formData.content.sidebar_content || ''}
             onChange={(e) => setFormData(prev => ({
               ...prev,
               content: { ...prev.content, sidebar_content: e.target.value }
             }))}
             rows={5}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Optional sidebar content"
           />
         </div>
 
         {/* Footer Content */}
-        <div>
-          <label htmlFor="footer_content" className="block text-sm font-medium text-gray-700 mb-2">
-            Footer Content
-          </label>
-          <textarea
+        <div className="space-y-2">
+          <Label htmlFor="footer_content">Footer Content</Label>
+          <Textarea
             id="footer_content"
-            value={formData.content.footer_content}
+            value={formData.content.footer_content || ''}
             onChange={(e) => setFormData(prev => ({
               ...prev,
               content: { ...prev.content, footer_content: e.target.value }
             }))}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Optional footer content"
           />
         </div>
 
         {/* Tags */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Tags
-          </label>
+        <div className="space-y-2">
+          <Label>Tags</Label>
           <div className="flex gap-2 mb-2">
-            <input
-              type="text"
+            <Input
               value={newTag}
               onChange={(e) => setNewTag(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Add a tag"
+              className="flex-1"
             />
-            <button
-              type="button"
-              onClick={addTag}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            >
+            <Button type="button" onClick={addTag} variant="outline">
               Add
-            </button>
+            </Button>
           </div>
           <div className="flex flex-wrap gap-2">
             {formData.content.tags.map(tag => (
               <span
                 key={tag}
-                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
+                className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-primary/10 text-primary"
               >
                 {tag}
                 <button
                   type="button"
                   onClick={() => removeTag(tag)}
-                  className="ml-2 text-blue-600 hover:text-blue-800"
+                  className="ml-2 text-primary hover:text-primary/80"
                 >
                   ×
                 </button>
@@ -254,22 +241,21 @@ export function ArticleForm({
       </div>
 
       {/* Form Actions */}
-      <div className="flex justify-end space-x-4 pt-6 border-t">
-        <button
+      <div className="flex justify-end gap-4 pt-6 border-t">
+        <Button
           type="button"
+          variant="outline"
           onClick={onCancel}
-          className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
           disabled={isLoading}
         >
           Cancel
-        </button>
-        <button
+        </Button>
+        <Button
           type="submit"
-          className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50"
           disabled={isLoading}
         >
           {isLoading ? 'Saving...' : (article ? 'Update Article' : 'Create Article')}
-        </button>
+        </Button>
       </div>
     </form>
   );
