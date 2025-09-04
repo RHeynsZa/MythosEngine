@@ -7,10 +7,10 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Q
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_db
 from app.services.image_service import ImageService, ImageStorageError
 from app.schemas.image import ImageResponse, ImageListResponse, ImageUpdate, ImageUploadResponse
 from app.core.config import settings
+from app.db.database import get_db
 
 router = APIRouter()
 
