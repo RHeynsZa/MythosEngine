@@ -134,3 +134,6 @@ backend/alembic/versions/*.py
 !backend/alembic/versions/.gitkeep
 
 count.txt
+
+# Image storage
+images/
