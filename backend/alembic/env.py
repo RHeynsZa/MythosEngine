@@ -9,7 +9,8 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from app.db.database import Base
-from app.models import project, article  # Import all models
+# Import all database models to ensure they're registered with Base.metadata
+from app.db.models import ArticleDB, ProjectDB, PersonDB, SettlementDB, ImageDB
 from app.core.config import settings
 
 # this is the Alembic Config object, which provides
@@ -32,7 +33,8 @@ target_metadata = Base.metadata
 
 
 def get_url():
-    return settings.database_url
+    # Use alembic.ini URL if available, otherwise fall back to settings
+    return config.get_main_option("sqlalchemy.url") or settings.database_url
 
 
 def run_migrations_offline() -> None:

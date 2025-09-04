@@ -9,5 +9,6 @@ from .article import ArticleDB
 from .project import ProjectDB
 from .person import PersonDB
 from .settlement import SettlementDB
+from .image import ImageDB
 
-__all__ = ["ArticleDB", "ProjectDB", "PersonDB", "SettlementDB"]
+__all__ = ["ArticleDB", "ProjectDB", "PersonDB", "SettlementDB", "ImageDB"]

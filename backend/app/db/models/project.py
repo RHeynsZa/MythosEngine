@@ -24,3 +24,6 @@ class ProjectDB(Base):
     articles = relationship(
         "ArticleDB", back_populates="project", cascade="all, delete-orphan"
     )
+    images = relationship(
+        "ImageDB", back_populates="project", cascade="all, delete-orphan"
+    )

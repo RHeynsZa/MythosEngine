@@ -32,6 +32,19 @@ class Settings(BaseSettings):
     # AI Settings (for future implementation)
     OPENAI_API_KEY: Optional[str] = None
 
+    # Image Storage Settings
+    USE_S3_STORAGE: bool = False  # Set to True for production S3 storage
+    LOCAL_IMAGES_PATH: str = "images"  # Local storage path
+    MAX_IMAGE_SIZE_MB: int = 10  # Maximum image file size in MB
+    ALLOWED_IMAGE_TYPES: List[str] = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+    
+    # S3 Settings (for online hosting)
+    AWS_ACCESS_KEY_ID: Optional[str] = None
+    AWS_SECRET_ACCESS_KEY: Optional[str] = None
+    AWS_REGION: str = "us-east-1"
+    S3_BUCKET_NAME: Optional[str] = None
+    S3_BASE_URL: Optional[str] = None  # Custom S3 endpoint URL if needed
+
     class Config:
         env_file = ".env"
         case_sensitive = True
