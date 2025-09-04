@@ -78,28 +78,3 @@ class ArticleService:
             self.repository.delete(article_id)
         return article
 
-
-# Legacy functions for backward compatibility
-def get_article(db: Session, article_id: int):
-    service = ArticleService(db)
-    return service.get_article(article_id)
-
-
-def get_articles(db: Session, project_id: Optional[int] = None, skip: int = 0, limit: int = 100):
-    service = ArticleService(db)
-    return service.get_articles(project_id, skip, limit)
-
-
-def create_article(db: Session, article: ArticleCreate):
-    service = ArticleService(db)
-    return service.create_article(article)
-
-
-def update_article(db: Session, article_id: int, article: ArticleUpdate):
-    service = ArticleService(db)
-    return service.update_article(article_id, article)
-
-
-def delete_article(db: Session, article_id: int):
-    service = ArticleService(db)
-    return service.delete_article(article_id)

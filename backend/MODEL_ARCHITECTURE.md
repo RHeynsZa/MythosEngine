@@ -192,10 +192,11 @@ class ArticleService:
         # Return domain model
 ```
 
-### Legacy Compatibility:
-Each service provides legacy functions for backward compatibility:
+### Service Usage:
+Services are used directly with dependency injection:
 ```python
-def get_article(db: Session, article_id: int):
+# In your API endpoint
+def get_article_endpoint(article_id: int, db: Session = Depends(get_db)):
     service = ArticleService(db)
     return service.get_article(article_id)
 ```
@@ -228,21 +229,26 @@ class Person(PersonBase):
     updated_at: datetime
 ```
 
-## Migration Strategy
+## Database Migration
 
-### Database Migration
 A migration file has been created at `alembic/versions/001_add_person_settlement_models.py` that:
 1. Creates the new table structure
 2. Adds proper indexes for performance
 3. Sets up foreign key relationships
 4. Includes rollback procedures
 
-### Backward Compatibility
-The `app/models/__init__.py` file provides aliases for existing code:
+### Model Organization
+The `app/models/__init__.py` file provides convenient access to database models:
 ```python
-from app.db.models.article import ArticleDB as Article
-from app.db.models.project import ProjectDB as Project
-# ... etc
+from app.db.models.article import ArticleDB
+from app.db.models.project import ProjectDB
+from app.db.models.person import PersonDB
+from app.db.models.settlement import SettlementDB
+```
+
+For domain models, import directly from `app.domain.models`:
+```python
+from app.domain.models import Article, Person, Settlement, Project
 ```
 
 ## Usage Examples

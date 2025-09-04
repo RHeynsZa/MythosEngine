@@ -68,28 +68,3 @@ class ProjectService:
             self.repository.delete(project_id)
         return project
 
-
-# Legacy functions for backward compatibility
-def get_project(db: Session, project_id: int):
-    service = ProjectService(db)
-    return service.get_project(project_id)
-
-
-def get_projects(db: Session, skip: int = 0, limit: int = 100):
-    service = ProjectService(db)
-    return service.get_projects(skip, limit)
-
-
-def create_project(db: Session, project: ProjectCreate):
-    service = ProjectService(db)
-    return service.create_project(project)
-
-
-def update_project(db: Session, project_id: int, project: ProjectUpdate):
-    service = ProjectService(db)
-    return service.update_project(project_id, project)
-
-
-def delete_project(db: Session, project_id: int):
-    service = ProjectService(db)
-    return service.delete_project(project_id)
