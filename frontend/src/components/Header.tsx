@@ -13,8 +13,9 @@ export default function Header() {
             Mythos Engine
           </Link>
           <nav className="hidden gap-2 md:flex">
-            <NavLink to="/users" label="Users" />
+            <NavLink to="/users" label="Profile" />
             <NavLink to="/projects" label="Projects" />
+            <NavLink to="/admin" label="Admin" />
           </nav>
         </div>
         

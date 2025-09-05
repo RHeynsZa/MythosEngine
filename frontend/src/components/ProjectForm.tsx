@@ -37,7 +37,7 @@ export function ProjectForm({ onSubmit, onCancel, initialData, mode = 'create' }
   if (!currentUser) {
     return (
       <div className="p-4 text-center text-gray-500">
-        Please select a user first to create a project.
+        Loading user information...
       </div>
     )
   }
@@ -67,7 +67,7 @@ export function ProjectForm({ onSubmit, onCancel, initialData, mode = 'create' }
       </div>
 
       <div className="text-sm text-gray-600 mb-4">
-        Creating project for: <strong>{currentUser.full_name || currentUser.username}</strong>
+        Project owner: <strong>{currentUser.full_name || currentUser.username}</strong>
       </div>
 
       <div className="flex gap-2">

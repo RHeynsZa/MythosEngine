@@ -25,9 +25,6 @@ function LandingPage() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button asChild>
-              <Link to="/users">Manage Users</Link>
-            </Button>
-            <Button asChild>
               <Link to="/projects">View Projects</Link>
             </Button>
             <Button variant="secondary" asChild>

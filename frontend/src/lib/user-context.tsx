@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { UsersApi } from '@/api/users'
 import type { User } from '@/types/user'
 
 interface UserContextType {
 	currentUser: User | null
-	setCurrentUser: (user: User | null) => void
+	setCurrentUser: (user: User) => void
 	isLoading: boolean
+	refreshUser: () => Promise<void>
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined)
@@ -13,45 +15,64 @@ interface UserProviderProps {
 	children: ReactNode
 }
 
-const CURRENT_USER_KEY = 'mythosengine_current_user'
+const CURRENT_USER_ID_KEY = 'mythosengine_current_user_id'
+const DEFAULT_USER = {
+	username: 'user',
+	email: 'user@mythosengine.local',
+	full_name: 'Default User',
+	bio: 'The main user of this MythosEngine instance',
+}
 
 export function UserProvider({ children }: UserProviderProps) {
 	const [currentUser, setCurrentUserState] = useState<User | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
 
-	// Load user from localStorage on mount
-	useEffect(() => {
+	const loadOrCreateUser = async () => {
 		try {
-			const storedUser = localStorage.getItem(CURRENT_USER_KEY)
-			if (storedUser) {
-				const user = JSON.parse(storedUser)
+			// First, try to get users to see if any exist
+			const users = await UsersApi.list({ limit: 1, active_only: true })
+			
+			if (users && users.length > 0) {
+				// Use the first active user
+				const user = users[0]
 				setCurrentUserState(user)
+				localStorage.setItem(CURRENT_USER_ID_KEY, user.id.toString())
+			} else {
+				// No users exist, create the default user
+				const newUser = await UsersApi.create(DEFAULT_USER)
+				setCurrentUserState(newUser)
+				localStorage.setItem(CURRENT_USER_ID_KEY, newUser.id.toString())
 			}
 		} catch (error) {
-			console.error('Failed to load user from localStorage:', error)
-			localStorage.removeItem(CURRENT_USER_KEY)
+			console.error('Failed to load or create user:', error)
 		} finally {
 			setIsLoading(false)
 		}
-	}, [])
+	}
 
-	const setCurrentUser = (user: User | null) => {
-		setCurrentUserState(user)
-		
-		// Persist to localStorage
-		try {
-			if (user) {
-				localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user))
-			} else {
-				localStorage.removeItem(CURRENT_USER_KEY)
+	const refreshUser = async () => {
+		if (currentUser) {
+			try {
+				const updatedUser = await UsersApi.get(currentUser.id)
+				setCurrentUserState(updatedUser)
+			} catch (error) {
+				console.error('Failed to refresh user:', error)
 			}
-		} catch (error) {
-			console.error('Failed to save user to localStorage:', error)
 		}
 	}
 
+	// Load user on mount
+	useEffect(() => {
+		loadOrCreateUser()
+	}, [])
+
+	const setCurrentUser = (user: User) => {
+		setCurrentUserState(user)
+		localStorage.setItem(CURRENT_USER_ID_KEY, user.id.toString())
+	}
+
 	return (
-		<UserContext.Provider value={{ currentUser, setCurrentUser, isLoading }}>
+		<UserContext.Provider value={{ currentUser, setCurrentUser, isLoading, refreshUser }}>
 			{children}
 		</UserContext.Provider>
 	)

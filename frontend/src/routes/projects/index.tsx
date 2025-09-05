@@ -40,8 +40,8 @@ function ProjectsPage() {
           <h1 className="text-3xl font-bold">Projects</h1>
           <p className="text-muted-foreground">
             {currentUser 
-              ? `Manage projects for ${currentUser.full_name || currentUser.username}`
-              : 'Select a user to view their projects'
+              ? `Your projects as ${currentUser.full_name || currentUser.username}`
+              : 'Loading your projects...'
             }
           </p>
         </div>
@@ -107,19 +107,7 @@ function ProjectsPage() {
         </div>
       )}
 
-      {!currentUser && !isLoading && (
-        <div className="text-center py-12">
-          <h2 className="text-xl font-semibold mb-2">No user selected</h2>
-          <p className="text-muted-foreground mb-4">
-            Please select a user from the Users page to view their projects
-          </p>
-          <Link to="/users">
-            <Button>Go to Users</Button>
-          </Link>
-        </div>
-      )}
-
-      {currentUser && (!projects || projects.length === 0) && !showCreateForm && !isLoading && !isError && (
+      {(!projects || projects.length === 0) && !showCreateForm && !isLoading && !isError && currentUser && (
         <div className="text-center py-12">
           <h2 className="text-xl font-semibold mb-2">No projects yet</h2>
           <p className="text-muted-foreground mb-4">
