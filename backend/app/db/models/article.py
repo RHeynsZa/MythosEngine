@@ -5,7 +5,7 @@ Article database model for SQLAlchemy persistence.
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON
 from app.db.database import Base
 
 
@@ -15,7 +15,7 @@ class ArticleDB(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True, nullable=False)
-    content = Column(JSONB, nullable=True, default={})
+    content = Column(JSON, nullable=True, default={})
     article_type = Column(String, default="general", index=True)
     project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
     header_image_id = Column(Integer, ForeignKey("images.id"), nullable=True)

@@ -4,7 +4,7 @@ Person database model for SQLAlchemy persistence.
 
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON
 from app.db.database import Base
 
 
@@ -15,8 +15,8 @@ class PersonDB(Base):
     id = Column(Integer, primary_key=True, index=True)
     article_id = Column(Integer, ForeignKey("articles.id"), nullable=False, unique=True)
     
-    # Core person data stored as JSONB for flexibility
-    person_data = Column(JSONB, nullable=False, default={})
+    # Core person data stored as JSON for flexibility
+    person_data = Column(JSON, nullable=False, default={})
     
     # Indexed fields for common queries
     race = Column(String, index=True, nullable=True)
