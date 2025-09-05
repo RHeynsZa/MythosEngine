@@ -13,7 +13,7 @@ export default function Header() {
             Mythos Engine
           </Link>
           <nav className="hidden gap-2 md:flex">
-            <NavLink to="/users" label="Profile" />
+            <NavLink to="/profile" label="Profile" />
             <NavLink to="/projects" label="Projects" />
             <NavLink to="/admin" label="Admin" />
           </nav>

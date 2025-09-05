@@ -18,6 +18,6 @@ function ProfilePage() {
 	)
 }
 
-export const Route = createFileRoute('/users')({
+export const Route = createFileRoute('/profile')({
 	component: ProfilePage,
 })
