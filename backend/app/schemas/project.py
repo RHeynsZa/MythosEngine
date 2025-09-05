@@ -12,7 +12,7 @@ class ProjectBase(BaseModel):
 
 
 class ProjectCreate(ProjectBase):
-    pass
+    user_id: int
 
 
 class ProjectUpdate(BaseModel):
@@ -20,10 +20,17 @@ class ProjectUpdate(BaseModel):
     description: Optional[str] = None
 
 
-class Project(ProjectBase):
+class ProjectResponse(ProjectBase):
     id: int
+    user_id: int
     created_at: datetime
     updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class Project(ProjectResponse):
     articles: List["Article"] = Field(default_factory=list)
 
     class Config:

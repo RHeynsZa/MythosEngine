@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from typing import List
+from typing import List, Optional
 from app.schemas.project import Project, ProjectCreate, ProjectUpdate
 from app.services.container import get_services, ServiceContainer
 
@@ -7,9 +7,14 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[Project])
-def get_projects(skip: int = 0, limit: int = 100, services: ServiceContainer = Depends(get_services)):
-    """Get all projects"""
-    projects = services.projects.get_projects(skip=skip, limit=limit)
+def get_projects(
+    skip: int = 0, 
+    limit: int = 100, 
+    user_id: Optional[int] = None,
+    services: ServiceContainer = Depends(get_services)
+):
+    """Get all projects, optionally filtered by user"""
+    projects = services.projects.get_projects(skip=skip, limit=limit, user_id=user_id)
     return projects
 
 

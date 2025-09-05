@@ -11,6 +11,7 @@ from app.services.article_service import ArticleService
 from app.services.image_service import ImageService
 from app.services.person_service import PersonService
 from app.services.settlement_service import SettlementService
+from app.services.user_service import UserService
 
 
 class ServiceContainer:
@@ -25,6 +26,7 @@ class ServiceContainer:
         self._db = db
 
         # Core services
+        self.users = UserService(db)
         self.projects = ProjectService(db)
         self.articles = ArticleService(db)
         self.images = ImageService(db)

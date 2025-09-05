@@ -1,5 +1,6 @@
 export { apiClient } from './client'
 export { ProjectsApi } from './projects'
 export { ArticlesApi } from './articles'
+export { UsersApi } from './users'
 export { queryKeys } from './queryKeys'
 export * from './hooks'

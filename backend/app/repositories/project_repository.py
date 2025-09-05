@@ -19,15 +19,24 @@ class ProjectRepository(BaseRepository[ProjectDB, Project]):
         """Get project by name."""
         return self.db.query(ProjectDB).filter(ProjectDB.name == name).first()
 
-    def search_by_name(self, name_pattern: str, skip: int = 0, limit: int = 100) -> List[ProjectDB]:
-        """Search projects by name pattern."""
+    def get_by_user_id(self, user_id: int, skip: int = 0, limit: int = 100) -> List[ProjectDB]:
+        """Get projects by user ID."""
         return (
             self.db.query(ProjectDB)
-            .filter(ProjectDB.name.ilike(f"%{name_pattern}%"))
+            .filter(ProjectDB.user_id == user_id)
             .offset(skip)
             .limit(limit)
             .all()
         )
+
+    def search_by_name(self, name_pattern: str, user_id: Optional[int] = None, skip: int = 0, limit: int = 100) -> List[ProjectDB]:
+        """Search projects by name pattern, optionally filtered by user."""
+        query = self.db.query(ProjectDB).filter(ProjectDB.name.ilike(f"%{name_pattern}%"))
+        
+        if user_id is not None:
+            query = query.filter(ProjectDB.user_id == user_id)
+            
+        return query.offset(skip).limit(limit).all()
 
     def to_domain(self, db_obj: ProjectDB) -> Project:
         """Convert database model to domain model."""
@@ -35,6 +44,7 @@ class ProjectRepository(BaseRepository[ProjectDB, Project]):
             id=db_obj.id,
             name=db_obj.name,
             description=db_obj.description,
+            user_id=db_obj.user_id,
             created_at=db_obj.created_at,
             updated_at=db_obj.updated_at
         )
@@ -43,7 +53,8 @@ class ProjectRepository(BaseRepository[ProjectDB, Project]):
         """Convert domain model to database model."""
         db_obj = ProjectDB(
             name=domain_obj.name,
-            description=domain_obj.description
+            description=domain_obj.description,
+            user_id=domain_obj.user_id
         )
 
         if domain_obj.id:
@@ -69,6 +80,7 @@ class ProjectRepository(BaseRepository[ProjectDB, Project]):
         # Update fields
         db_obj.name = domain_obj.name
         db_obj.description = domain_obj.description
+        db_obj.user_id = domain_obj.user_id
 
         updated_db_obj = self.update(db_obj)
         return self.to_domain(updated_db_obj)

@@ -1,10 +1,12 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { useState } from 'react'
 import { ProjectForm } from '@/components/ProjectForm'
 import { useCreateProject, useProjects } from '@/api'
-import type { Project } from '@/types/project'
+import { useCurrentUser } from '@/lib/user-context'
+import type { Project, ProjectCreate } from '@/types/project'
 
 export const Route = createFileRoute('/projects/')({
   component: ProjectsPage,
@@ -19,12 +21,15 @@ function formatDate(iso: string) {
 }
 
 function ProjectsPage() {
+  const { currentUser } = useCurrentUser()
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const { data: projects, isLoading, isError, error } = useProjects()
+  const { data: projects, isLoading, isError, error } = useProjects({ 
+    user_id: currentUser?.id 
+  })
   const createProject = useCreateProject()
 
-  const handleCreateProject = async (projectData: { title: string; description: string }) => {
-    await createProject.mutateAsync({ name: projectData.title, description: projectData.description })
+  const handleCreateProject = async (projectData: ProjectCreate) => {
+    await createProject.mutateAsync(projectData)
     setShowCreateForm(false)
   }
 
@@ -33,11 +38,18 @@ function ProjectsPage() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Projects</h1>
-          <p className="text-muted-foreground">Manage your creative projects and their articles</p>
+          <p className="text-muted-foreground">
+            {currentUser 
+              ? `Manage projects for ${currentUser.full_name || currentUser.username}`
+              : 'Select a user to view their projects'
+            }
+          </p>
         </div>
-        <Button onClick={() => setShowCreateForm(true)}>
-          Create Project
-        </Button>
+        {currentUser && (
+          <Button onClick={() => setShowCreateForm(true)}>
+            Create Project
+          </Button>
+        )}
       </div>
 
       {showCreateForm && (
@@ -95,7 +107,19 @@ function ProjectsPage() {
         </div>
       )}
 
-      {(!projects || projects.length === 0) && !showCreateForm && !isLoading && !isError && (
+      {!currentUser && !isLoading && (
+        <div className="text-center py-12">
+          <h2 className="text-xl font-semibold mb-2">No user selected</h2>
+          <p className="text-muted-foreground mb-4">
+            Please select a user from the Users page to view their projects
+          </p>
+          <Link to="/users">
+            <Button>Go to Users</Button>
+          </Link>
+        </div>
+      )}
+
+      {currentUser && (!projects || projects.length === 0) && !showCreateForm && !isLoading && !isError && (
         <div className="text-center py-12">
           <h2 className="text-xl font-semibold mb-2">No projects yet</h2>
           <p className="text-muted-foreground mb-4">

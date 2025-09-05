@@ -2,7 +2,7 @@ import { apiClient } from './client'
 import type { Project, ProjectCreate, ProjectUpdate } from '@/types/project'
 
 export const ProjectsApi = {
-	list: (params?: { skip?: number; limit?: number }) =>
+	list: (params?: { skip?: number; limit?: number; user_id?: number }) =>
 		apiClient.get<Project[]>('/projects', { query: params }),
 
 	get: (projectId: number) => apiClient.get<Project>(`/projects/${projectId}`),

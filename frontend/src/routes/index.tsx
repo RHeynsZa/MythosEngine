@@ -25,6 +25,9 @@ function LandingPage() {
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button asChild>
+              <Link to="/users">Manage Users</Link>
+            </Button>
+            <Button asChild>
               <Link to="/projects">View Projects</Link>
             </Button>
             <Button variant="secondary" asChild>
@@ -37,9 +40,9 @@ function LandingPage() {
       <section className="border-t border-border bg-muted/30">
         <div className="mx-auto w-full max-w-7xl px-6 py-14">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Feature title="User Profiles" desc="Create and manage user profiles with personal information and project ownership." />
             <Feature title="Project Management" desc="Organize your creative works into structured projects with rich metadata." />
             <Feature title="Article Creation" desc="Write and edit articles with a simple interface, with plans for rich WYSIWYG editing." />
-            <Feature title="Lore Building" desc="Build comprehensive worlds and documentation for your creative projects." />
           </div>
         </div>
       </section>

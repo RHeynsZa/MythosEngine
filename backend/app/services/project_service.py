@@ -25,14 +25,17 @@ class ProjectService:
             return self.repository.to_domain(db_project)
         return None
 
-    def get_projects(self, skip: int = 0, limit: int = 100) -> List[Project]:
-        """Get all projects with pagination."""
-        db_projects = self.repository.get_all(skip, limit)
+    def get_projects(self, skip: int = 0, limit: int = 100, user_id: Optional[int] = None) -> List[Project]:
+        """Get all projects with pagination, optionally filtered by user."""
+        if user_id is not None:
+            db_projects = self.repository.get_by_user_id(user_id, skip, limit)
+        else:
+            db_projects = self.repository.get_all(skip, limit)
         return [self.repository.to_domain(db_project) for db_project in db_projects]
 
-    def search_projects(self, name_pattern: str, skip: int = 0, limit: int = 100) -> List[Project]:
-        """Search projects by name pattern."""
-        db_projects = self.repository.search_by_name(name_pattern, skip, limit)
+    def search_projects(self, name_pattern: str, skip: int = 0, limit: int = 100, user_id: Optional[int] = None) -> List[Project]:
+        """Search projects by name pattern, optionally filtered by user."""
+        db_projects = self.repository.search_by_name(name_pattern, user_id, skip, limit)
         return [self.repository.to_domain(db_project) for db_project in db_projects]
 
     def create_project(self, project_data: ProjectCreate) -> Project:
@@ -40,7 +43,8 @@ class ProjectService:
         # Convert schema to domain model
         domain_project = Project(
             name=project_data.name,
-            description=project_data.description
+            description=project_data.description,
+            user_id=project_data.user_id
         )
 
         return self.repository.create_from_domain(domain_project)

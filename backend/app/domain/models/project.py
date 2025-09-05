@@ -17,6 +17,7 @@ class Project:
     A project represents a campaign, world, or collection of related content.
     """
     name: str
+    user_id: int
     description: Optional[str] = None
     id: Optional[int] = None
     created_at: Optional[datetime] = None

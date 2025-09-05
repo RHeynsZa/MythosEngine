@@ -3,39 +3,54 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { useCurrentUser } from '@/lib/user-context'
+import type { ProjectCreate, ProjectUpdate } from '@/types/project'
 
 interface ProjectFormProps {
-  onSubmit: (data: { title: string; description: string }) => void
+  onSubmit: (data: ProjectCreate | ProjectUpdate) => void
   onCancel: () => void
-  initialData?: { title: string; description: string }
+  initialData?: { name: string; description: string }
+  mode?: 'create' | 'edit'
 }
 
-export function ProjectForm({ onSubmit, onCancel, initialData }: ProjectFormProps) {
-  const [title, setTitle] = useState(initialData?.title || '')
+export function ProjectForm({ onSubmit, onCancel, initialData, mode = 'create' }: ProjectFormProps) {
+  const { currentUser } = useCurrentUser()
+  const [name, setName] = useState(initialData?.name || '')
   const [description, setDescription] = useState(initialData?.description || '')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!title.trim()) return
+    if (!name.trim() || !currentUser) return
 
     setIsSubmitting(true)
     try {
-      await onSubmit({ title: title.trim(), description: description.trim() })
+      const submitData = mode === 'create' 
+        ? { name: name.trim(), description: description.trim() || null, user_id: currentUser.id }
+        : { name: name.trim(), description: description.trim() || null }
+      await onSubmit(submitData)
     } finally {
       setIsSubmitting(false)
     }
   }
 
+  if (!currentUser) {
+    return (
+      <div className="p-4 text-center text-gray-500">
+        Please select a user first to create a project.
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
-        <Label htmlFor="title">Project Title</Label>
+        <Label htmlFor="name">Project Name</Label>
         <Input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Enter project title..."
+          id="name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Enter project name..."
           required
         />
       </div>
@@ -51,9 +66,13 @@ export function ProjectForm({ onSubmit, onCancel, initialData }: ProjectFormProp
         />
       </div>
 
+      <div className="text-sm text-gray-600 mb-4">
+        Creating project for: <strong>{currentUser.full_name || currentUser.username}</strong>
+      </div>
+
       <div className="flex gap-2">
-        <Button type="submit" disabled={!title.trim() || isSubmitting}>
-          {isSubmitting ? 'Creating...' : 'Create Project'}
+        <Button type="submit" disabled={!name.trim() || isSubmitting}>
+          {isSubmitting ? (mode === 'create' ? 'Creating...' : 'Updating...') : (mode === 'create' ? 'Create Project' : 'Update Project')}
         </Button>
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
