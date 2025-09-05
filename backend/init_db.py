@@ -2,7 +2,6 @@
 Initialize the database with tables
 """
 from app.db.database import engine, Base
-from app.models import project, article  # Import all models to register them
 
 def init_db():
     """Create all tables"""
