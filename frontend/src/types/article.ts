@@ -13,6 +13,12 @@ export enum ArticleType {
   ORGANIZATION = "organization"
 }
 
+export enum ArticleVisibility {
+  UNLISTED = "unlisted",  // Only visible to the writer
+  PRIVATE = "private",    // Visible to everyone invited to view the project
+  PUBLIC = "public"       // Open to anyone (even unauthorized users)
+}
+
 export interface ArticleContent {
   main_content?: string | null;
   sidebar_content?: string | null;
@@ -44,6 +50,8 @@ export interface Article {
   title: string;
   content?: ArticleContent | null;
   article_type: ArticleType;
+  visibility: ArticleVisibility;
+  author_id: number;
   project_id: number;
   header_image_id?: number | null;
   header_image?: Image | null;
@@ -56,6 +64,7 @@ export interface ArticleCreate {
   title: string;
   content?: ArticleContent | null;
   article_type: ArticleType;
+  visibility: ArticleVisibility;
   project_id: number;
   header_image_id?: number | null;
   spotify_url?: string | null;
@@ -65,6 +74,7 @@ export interface ArticleUpdate {
   title?: string;
   content?: ArticleContent | null;
   article_type?: ArticleType;
+  visibility?: ArticleVisibility;
   header_image_id?: number | null;
   spotify_url?: string | null;
 }
@@ -73,6 +83,8 @@ export interface ArticleSummary {
   id: number;
   title: string;
   article_type: ArticleType;
+  visibility: ArticleVisibility;
+  author_id: number;
   project_id: number;
   word_count: number;
   created_at: string;

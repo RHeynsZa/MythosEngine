@@ -9,5 +9,6 @@ from .article import Article
 from .person import Person
 from .settlement import Settlement, SettlementType
 from .project import Project
+from .user import User, UserCreate, UserUpdate
 
-__all__ = ["Article", "Person", "Settlement", "SettlementType", "Project"]
+__all__ = ["Article", "Person", "Settlement", "SettlementType", "Project", "User", "UserCreate", "UserUpdate"]

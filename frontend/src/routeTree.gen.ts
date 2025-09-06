@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestUploadRouteImport } from './routes/test-upload'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsIndexRouteImport } from './routes/projects/index'
+import { Route as ProfileIndexRouteImport } from './routes/profile/index'
+import { Route as ProfileUsernameRouteImport } from './routes/profile/$username'
 import { Route as ProjectsProjectIdIndexRouteImport } from './routes/projects/$projectId/index'
 import { Route as ProjectsProjectIdArticleIdIndexRouteImport } from './routes/projects/$projectId/$articleId/index'
 
@@ -30,6 +32,16 @@ const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
   path: '/projects/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfileIndexRoute = ProfileIndexRouteImport.update({
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileUsernameRoute = ProfileUsernameRouteImport.update({
+  id: '/profile/$username',
+  path: '/profile/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProjectsProjectIdIndexRoute = ProjectsProjectIdIndexRouteImport.update({
   id: '/projects/$projectId/',
   path: '/projects/$projectId/',
@@ -45,6 +57,8 @@ const ProjectsProjectIdArticleIdIndexRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/test-upload': typeof TestUploadRoute
+  '/profile/$username': typeof ProfileUsernameRoute
+  '/profile': typeof ProfileIndexRoute
   '/projects': typeof ProjectsIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
   '/projects/$projectId/$articleId': typeof ProjectsProjectIdArticleIdIndexRoute
@@ -52,6 +66,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/test-upload': typeof TestUploadRoute
+  '/profile/$username': typeof ProfileUsernameRoute
+  '/profile': typeof ProfileIndexRoute
   '/projects': typeof ProjectsIndexRoute
   '/projects/$projectId': typeof ProjectsProjectIdIndexRoute
   '/projects/$projectId/$articleId': typeof ProjectsProjectIdArticleIdIndexRoute
@@ -60,6 +76,8 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/test-upload': typeof TestUploadRoute
+  '/profile/$username': typeof ProfileUsernameRoute
+  '/profile/': typeof ProfileIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/projects/$projectId/': typeof ProjectsProjectIdIndexRoute
   '/projects/$projectId/$articleId/': typeof ProjectsProjectIdArticleIdIndexRoute
@@ -69,6 +87,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/test-upload'
+    | '/profile/$username'
+    | '/profile'
     | '/projects'
     | '/projects/$projectId'
     | '/projects/$projectId/$articleId'
@@ -76,6 +96,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/test-upload'
+    | '/profile/$username'
+    | '/profile'
     | '/projects'
     | '/projects/$projectId'
     | '/projects/$projectId/$articleId'
@@ -83,6 +105,8 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/test-upload'
+    | '/profile/$username'
+    | '/profile/'
     | '/projects/'
     | '/projects/$projectId/'
     | '/projects/$projectId/$articleId/'
@@ -91,6 +115,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   TestUploadRoute: typeof TestUploadRoute
+  ProfileUsernameRoute: typeof ProfileUsernameRoute
+  ProfileIndexRoute: typeof ProfileIndexRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
   ProjectsProjectIdIndexRoute: typeof ProjectsProjectIdIndexRoute
   ProjectsProjectIdArticleIdIndexRoute: typeof ProjectsProjectIdArticleIdIndexRoute
@@ -119,6 +145,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profile/': {
+      id: '/profile/'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile/$username': {
+      id: '/profile/$username'
+      path: '/profile/$username'
+      fullPath: '/profile/$username'
+      preLoaderRoute: typeof ProfileUsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/projects/$projectId/': {
       id: '/projects/$projectId/'
       path: '/projects/$projectId'
@@ -139,6 +179,8 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   TestUploadRoute: TestUploadRoute,
+  ProfileUsernameRoute: ProfileUsernameRoute,
+  ProfileIndexRoute: ProfileIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
   ProjectsProjectIdIndexRoute: ProjectsProjectIdIndexRoute,
   ProjectsProjectIdArticleIdIndexRoute: ProjectsProjectIdArticleIdIndexRoute,

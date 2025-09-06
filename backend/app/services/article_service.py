@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
 from app.domain.models.article import Article, ArticleContent, ArticleType
 from app.repositories.article_repository import ArticleRepository
-from app.schemas.article import ArticleCreate, ArticleUpdate
+from app.db.models.article import ArticleVisibility
+from app.schemas.article import ArticleCreate, ArticleUpdate, ArticleVisibilityEnum
 from typing import Optional, List
 
 
@@ -18,14 +19,50 @@ class ArticleService:
             return self.repository.to_domain(db_article)
         return None
 
-    def get_articles(self, project_id: Optional[int] = None, skip: int = 0, limit: int = 100) -> List[Article]:
-        """Get articles with optional project filtering."""
+    def get_articles(self, project_id: Optional[int] = None, user_id: Optional[int] = None, skip: int = 0, limit: int = 100) -> List[Article]:
+        """Get articles with optional project filtering and visibility rules."""
         if project_id:
             db_articles = self.repository.get_by_project_with_header_images(project_id, skip, limit)
+            # Filter by visibility rules
+            visible_articles = []
+            for article in db_articles:
+                if self._is_article_visible_to_user(article, user_id):
+                    visible_articles.append(article)
+            return [self.repository.to_domain(db_article) for db_article in visible_articles]
         else:
-            db_articles = self.repository.get_all(skip, limit)
+            db_articles = self.repository.get_visible_articles_for_user(user_id, skip, limit)
+            return [self.repository.to_domain(db_article) for db_article in db_articles]
+
+    def get_public_articles(self, skip: int = 0, limit: int = 100) -> List[Article]:
+        """Get all public articles."""
+        db_articles = self.repository.get_public_articles(skip, limit)
+        return [self.repository.to_domain(db_article) for db_article in db_articles]
+
+    def get_articles_by_author(self, author_id: int, requesting_user_id: Optional[int] = None, skip: int = 0, limit: int = 100) -> List[Article]:
+        """Get articles by author with visibility filtering."""
+        if requesting_user_id == author_id:
+            # Author can see all their own articles
+            db_articles = self.repository.get_by_author(author_id, skip, limit)
+        else:
+            # Others can only see public and private articles from this author
+            db_articles = self.repository.get_by_author(author_id, skip, limit)
+            visible_articles = []
+            for article in db_articles:
+                if article.visibility in [ArticleVisibility.PUBLIC, ArticleVisibility.PRIVATE]:
+                    visible_articles.append(article)
+            db_articles = visible_articles
         
         return [self.repository.to_domain(db_article) for db_article in db_articles]
+
+    def _is_article_visible_to_user(self, article_db, user_id: Optional[int]) -> bool:
+        """Check if an article is visible to a user based on visibility rules."""
+        if article_db.visibility == ArticleVisibility.PUBLIC:
+            return True
+        elif article_db.visibility == ArticleVisibility.PRIVATE:
+            return user_id is not None  # Private articles visible to any authenticated user for now
+        elif article_db.visibility == ArticleVisibility.UNLISTED:
+            return user_id is not None and user_id == article_db.author_id
+        return False
 
     def get_articles_by_type(self, article_type: str, skip: int = 0, limit: int = 100) -> List[Article]:
         """Get articles by type."""
@@ -37,22 +74,40 @@ class ArticleService:
         db_articles = self.repository.search_by_title(title_pattern, skip, limit)
         return [self.repository.to_domain(db_article) for db_article in db_articles]
 
-    def create_article(self, article_data: ArticleCreate) -> Article:
+    def create_article(self, article_data: ArticleCreate, author_id: int) -> Article:
         """Create a new article."""
         # Convert schema to domain model
         content = ArticleContent()
         if article_data.content:
             content = article_data.content
 
-        domain_article = Article(
+        # Create database object directly since we need to set author_id and visibility
+        from app.db.models.article import ArticleDB
+        
+        content_dict = {}
+        if content:
+            content_dict = {
+                "main_content": content.main_content,
+                "sidebar_content": content.sidebar_content,
+                "footer_content": content.footer_content,
+                "summary": content.summary,
+                "tags": content.tags,
+                "metadata": content.metadata
+            }
+
+        db_article = ArticleDB(
             title=article_data.title,
-            content=content,
-            article_type=ArticleType(article_data.article_type),
+            content=content_dict,
+            article_type=article_data.article_type.value,
+            visibility=ArticleVisibility(article_data.visibility.value),
+            author_id=author_id,
             project_id=article_data.project_id,
-            header_image_id=article_data.header_image_id
+            header_image_id=article_data.header_image_id,
+            spotify_url=article_data.spotify_url
         )
 
-        return self.repository.create_from_domain(domain_article)
+        created_article = self.repository.create(db_article)
+        return self.repository.to_domain(created_article)
 
     def update_article(self, article_id: int, article_data: ArticleUpdate) -> Optional[Article]:
         """Update an existing article."""

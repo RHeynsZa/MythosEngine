@@ -4,7 +4,7 @@ Article repository for database operations.
 
 from typing import Optional, List
 from sqlalchemy.orm import Session, joinedload
-from app.db.models.article import ArticleDB
+from app.db.models.article import ArticleDB, ArticleVisibility
 from app.domain.models.article import Article, ArticleContent, ArticleType
 from .base_repository import BaseRepository
 
@@ -64,6 +64,61 @@ class ArticleRepository(BaseRepository[ArticleDB, Article]):
             .limit(limit)
             .all()
         )
+
+    def get_by_visibility(self, visibility: ArticleVisibility, skip: int = 0, limit: int = 100) -> List[ArticleDB]:
+        """Get articles by visibility."""
+        return (
+            self.db.query(ArticleDB)
+            .filter(ArticleDB.visibility == visibility)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+    def get_by_author(self, author_id: int, skip: int = 0, limit: int = 100) -> List[ArticleDB]:
+        """Get articles by author ID."""
+        return (
+            self.db.query(ArticleDB)
+            .filter(ArticleDB.author_id == author_id)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+    def get_by_author_and_visibility(self, author_id: int, visibility: ArticleVisibility, skip: int = 0, limit: int = 100) -> List[ArticleDB]:
+        """Get articles by author ID and visibility."""
+        return (
+            self.db.query(ArticleDB)
+            .filter(ArticleDB.author_id == author_id)
+            .filter(ArticleDB.visibility == visibility)
+            .offset(skip)
+            .limit(limit)
+            .all()
+        )
+
+    def get_public_articles(self, skip: int = 0, limit: int = 100) -> List[ArticleDB]:
+        """Get all public articles."""
+        return self.get_by_visibility(ArticleVisibility.PUBLIC, skip, limit)
+
+    def get_visible_articles_for_user(self, user_id: Optional[int] = None, skip: int = 0, limit: int = 100) -> List[ArticleDB]:
+        """Get articles visible to a user based on visibility rules."""
+        query = self.db.query(ArticleDB)
+        
+        if user_id is None:
+            # Unauthenticated users can only see public articles
+            query = query.filter(ArticleDB.visibility == ArticleVisibility.PUBLIC)
+        else:
+            # Authenticated users can see:
+            # - Public articles
+            # - Private articles (from projects they have access to - for now, all private articles)
+            # - Their own unlisted articles
+            query = query.filter(
+                (ArticleDB.visibility == ArticleVisibility.PUBLIC) |
+                (ArticleDB.visibility == ArticleVisibility.PRIVATE) |
+                ((ArticleDB.visibility == ArticleVisibility.UNLISTED) & (ArticleDB.author_id == user_id))
+            )
+        
+        return query.offset(skip).limit(limit).all()
 
     def to_domain(self, db_obj: ArticleDB) -> Article:
         """Convert database model to domain model."""
