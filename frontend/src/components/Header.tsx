@@ -10,6 +10,7 @@ export default function Header() {
           </Link>
           <nav className="hidden gap-2 md:flex">
             <NavLink to="/projects" label="Projects" />
+            <NavLink to="/profile" label="Profile" />
           </nav>
         </div>
       </div>

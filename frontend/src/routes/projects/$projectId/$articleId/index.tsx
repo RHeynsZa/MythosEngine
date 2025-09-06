@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { DynamicArticleForm } from '@/components/DynamicArticleForm'
 import { DynamicArticleView } from '@/components/DynamicArticleView'
 import type { Article } from '@/types/article'
-import { ArticleType } from '@/types/article'
+import { ArticleType, ArticleVisibility } from '@/types/article'
 
 export const Route = createFileRoute('/projects/$projectId/$articleId/')({
   component: ArticleEditPage,
@@ -140,6 +140,8 @@ const mockArticles: Record<string, Article> = {
     id: 3,
     title: 'The Galactic Federation',
     article_type: ArticleType.ORGANIZATION,
+    visibility: ArticleVisibility.PUBLIC,
+    author_id: 1,
     project_id: 2,
     content: {
       main_content: 'A political alliance spanning multiple star systems, the Galactic Federation was formed in 2387 to maintain peace and facilitate trade between member worlds. The Federation operates under a democratic council system.',
